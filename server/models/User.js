@@ -29,8 +29,11 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
     profile: {
-      resume: {
+      resume_Url: {
         type: String, // URL of uploaded resume
+      },
+      resume_PublicId: {
+        type: String,
       },
       skills: {
         type: [String], // Array of strings

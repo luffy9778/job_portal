@@ -52,14 +52,13 @@ const jobSchema = new mongoose.Schema(
       {
         userId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
+          ref: "User"
         },
       },
     ],
   },
   {
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
