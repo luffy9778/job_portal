@@ -48,18 +48,14 @@ const jobSchema = new mongoose.Schema(
       ref: "Recruiter",
       required: true,
     },
-    applications: [
-      {
-        userId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
-      },
-    ],
+    status:{
+      type:String,
+      enum: ['open', 'closed'],
+      default: 'open',
+    }
   },
   {
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
