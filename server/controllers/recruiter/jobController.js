@@ -1,3 +1,5 @@
+const cloudinary = require("../../config/cloudinaryConfig");
+const Application = require("../../models/Application");
 const Job = require("../../models/Job");
 const Recruiter = require("../../models/Recruiter");
 
@@ -49,6 +51,7 @@ const postJob = async (req, res) => {
   }
 };
 
+//need to confirom updatePostedJob
 const updatePostedJob = async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -146,28 +149,68 @@ const deletePostedJob = async (req, res) => {
         .status(403)
         .json({ message: "Unauthorized to delete this job." });
     }
+    if (job.status !== "closed") {
+      return res
+        .status(400)
+        .json({ message: "Only closed jobs can be deleted." });
+    }
+
+    //add batch deletion if need here
+    const applications = await Application.find({ jobId: job._id });
+    for (const application of applications) {
+      if (application.resume_PublicId) {
+        await cloudinary.uploader.destroy(application.resume_PublicId);
+      }
+    }
+    await Application.deleteMany({ jobId: job._id });
     await job.deleteOne();
-    res.status(200).json({ message: "Job deleted successfully." });
+    res.status(200).json({
+      message:
+        "Job and associated applications (with resumes) deleted successfully.",
+    });
   } catch (error) {
     console.error("Error deleting job:", error);
     res.status(500).json({ message: error.message });
   }
 };
 
-const getPostedJobs = async (req, res) => {
+const getPostedJobsByStatus = async (req, res) => {
   try {
+    const { status = "open", page = 1, limit = 10 } = req.query;
+
     const recruiterId = req.user.recruiterId;
     const recruiter = await Recruiter.findById(recruiterId);
     if (!recruiter) {
       return res.status(400).json({ message: "You are not a recruiter" });
     }
-    const jobs = await Job.find({ recruiterId: recruiterId });
-    res.status(200).json({ jobs: jobs });
+
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const jobs = await Job.find({ recruiterId, status })
+      .skip(skip)
+      .limit(limitNumber)
+      .sort({ createdAt: -1 });
+
+    const totalJobs = await Job.countDocuments({ recruiterId, status });
+    const totalPages = Math.ceil(totalJobs / limitNumber);
+
+    res.status(200).json({
+      jobs,
+      pagination: {
+        totalJobs,
+        totalPages,
+        currentPage: pageNumber,
+        pageSize: limitNumber,
+      },
+    });
   } catch (error) {
     console.error("Error getting jobs:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
 const getPostedJobByID = async (req, res) => {
   try {
     const recruiterId = req.user.recruiterId;
@@ -193,10 +236,45 @@ const getPostedJobByID = async (req, res) => {
   }
 };
 
+const closeJobVacancy = async (req, res) => {
+  try {
+    const recruiterId = req.user.recruiterId;
+    const jobId = req.params.jobId;
+
+    const recruiter = await Recruiter.findById(recruiterId);
+    if (!recruiter) {
+      return res.status(400).json({ message: "You are not a recruiter" });
+    }
+
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found." });
+    }
+
+    if (job.recruiterId.toString() !== recruiter._id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to view this job." });
+    }
+
+    if (job.status !== "closed") {
+      job.status = "closed";
+      await job.save();
+      res.status(200).json({ message: "Job vacancy closed successfully" });
+    } else {
+      res.status(200).json({ message: "Job is already closed" });
+    }
+  } catch (error) {
+    console.error("Error closeing job vacancy:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   postJob,
   updatePostedJob,
   deletePostedJob,
-  getPostedJobs,
+  getPostedJobsByStatus,
   getPostedJobByID,
+  closeJobVacancy,
 };
