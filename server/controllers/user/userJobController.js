@@ -47,7 +47,7 @@ const applyForJob = async (req, res) => {
               {
                 resource_type: "raw",
                 public_id: fileName,
-                folder: `job_Portal/${jobId}/apllication`,
+                folder: `job_Portal/apllication/${job.title}}`,
               },
               (error, result) => (error ? reject(error) : resolve(result))
             )
@@ -56,7 +56,6 @@ const applyForJob = async (req, res) => {
 
         resume_Url = result.secure_url;
         resume_PublicId = result.public_id;
-
       } else {
         if (user.profile.resume_Url) {
           const resumeFile = user.profile.resume_Url;
@@ -70,7 +69,7 @@ const applyForJob = async (req, res) => {
           }
 
           const fileContent = fileResponse.data;
-          //the file dont have an extion so explicitily add pdf extention  
+          //the file dont have an extion so explicitily add pdf extention
           const newFileName = `${Date.now()}-${job.title}.pdf`;
 
           const result = await new Promise((resolve, reject) => {
@@ -79,7 +78,7 @@ const applyForJob = async (req, res) => {
                 {
                   resource_type: "raw",
                   public_id: newFileName,
-                  folder: `job_Portal/${jobId}/apllication`,
+                  folder: `job_Portal/apllication/${job.title}}`,
                 },
                 (error, result) => (error ? reject(error) : resolve(result))
               )
@@ -104,7 +103,6 @@ const applyForJob = async (req, res) => {
     return res
       .status(201)
       .json({ message: "Successfully applied for the job" });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Failed to update user profile" });
