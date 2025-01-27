@@ -38,9 +38,10 @@ const recruiterSchema = new mongoose.Schema(
         ref: "Job", // Reference to the Job model
       },
     ],
-    isApproved: {
-      type: Boolean,
-      default: false, // Approval status by admin
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
   },
   {

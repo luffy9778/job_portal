@@ -38,18 +38,38 @@ const recruiterSignUp = async (req, res) => {
 const recruiterLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Please fill in the required fields" });
+    }
+
     const recruiter = await Recruiter.findOne({ email });
     if (!recruiter) {
       return res
         .status(400)
         .json({ message: "Email or password is incorrect" });
     }
+
     const isValidPassword = await bcrypt.compare(password, recruiter.password);
     if (!isValidPassword) {
       return res
         .status(400)
         .json({ message: "Email or password is incorrect" });
     }
+
+    if (recruiter.status === "rejected") {
+      return res
+        .status(403)
+        .json({ message: "Your account has been rejected by the admin" });
+    }
+
+    if (recruiter.status === "pending") {
+      return res.status(401).json({
+        message: "Your account is still pending approval by the admin",
+      });
+    }
+
     const accessToken = jwt.sign(
       { recruiterId: recruiter._id },
       process.env.ACCESS_TOKEN_SECRET,
