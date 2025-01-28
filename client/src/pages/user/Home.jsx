@@ -1,7 +1,8 @@
 import React from 'react'
-import Navbaruser from '../components/Navbaruser'
-import JobCard from '../components/user/JobCard'
-
+import Navbaruser from '../../components/Navbaruser'
+import JobCard from '../../components/user/JobCard'
+import Footer from '../../components/Footer'
+import logo from '../../assets/linked.svg'
 
 function Home() {
   return (
@@ -110,6 +111,7 @@ function Home() {
     </div>
       </section>
       </div>
+      <Footer/>
   </>
   )
 }
