@@ -1,14 +1,11 @@
 import React from 'react'
+import logo from '../../assets/linked.svg'
 
 const jobCard = () => {
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-6">
         <div className="flex items-center mb-4">
-          <img
-            src="linkedin-logo.png"
-            alt="LinkedIn"
-            className="w-10 h-10 mr-4"
-          />
+         <img src={logo} class="h-8" alt="Flowbite Logo" />
           <div>
             <h3 className="text-lg font-medium">LinkedIn</h3>
             <p className="text-sm text-gray-500">New York, US</p>
@@ -33,9 +30,10 @@ const jobCard = () => {
         </div>
         <div className="flex justify-between items-center">
           <p className="text-lg font-bold text-gray-800">$500/Hour</p>
+          <a href="/jobDetails">
           <button className="bg-orange-400 text-white text-sm font-medium py-2 px-4 rounded hover:bg-orange-500">
-            Apply Now
-          </button>
+            Details
+          </button></a>
         </div>
       </div>
   )

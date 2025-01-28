@@ -1,7 +1,7 @@
 import React from "react";
-import navicon from "../assets/icons8-swagbucks.svg";
+import navicon from "../../assets/icons8-swagbucks.svg";
 
-function Navbaruser() {
+function RecruiterNavbar() {
   return (
     <>
       <nav class="bg-white border-gray-200 dark:bg-gray-900 fixed w-full ">
@@ -44,31 +44,22 @@ function Navbaruser() {
               <li>
                 <a
                   href="#"
-                  class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-orange-500 md:p-0 dark:text-white md:dark:text-orange-500"
-                  aria-current="page"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#about"
                   class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
-                  About
+                  View jobs
                 </a>
               </li>
               <li>
                 <a
-                  href="#jobs"
+                  href="#"
                   class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
-                  Jobs
+                  Add jobs
                 </a>
               </li>
               <li>
                 <a
-                  href="/signUp"
+                  href="/recruiterSignup"
                   class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Signup
@@ -76,7 +67,7 @@ function Navbaruser() {
               </li>
               <li>
                 <a
-                  href="/login"
+                  href="/recruiterLogin"
                   class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Login
@@ -90,4 +81,4 @@ function Navbaruser() {
   );
 }
 
-export default Navbaruser;
+export default RecruiterNavbar;
