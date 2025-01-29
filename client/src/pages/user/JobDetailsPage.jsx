@@ -7,8 +7,8 @@ const JobDetailsPage = () => {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white shadow-lg rounded-2xl">
-      <div className="space-y-4 p-6">
+    <div className=" p-6 max-w-4xl mx-auto bg-white shadow-lg rounded-2xl">
+      <div className="space-y-4 p-6  ">
         {/* Job Title */}
         <h1 className="text-2xl font-bold"></h1>
 

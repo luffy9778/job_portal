@@ -42,9 +42,12 @@ const userSchema = new mongoose.Schema(
         {
           companyName: {
             type: String,
+            unique: true,
           },
           years: {
             type: Number, // Number of years worked at the company
+            min:1,
+            // max?
           },
         },
       ],

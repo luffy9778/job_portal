@@ -25,7 +25,7 @@ const postJob = async (req, res) => {
     ) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
-    const recruiterId = req.user.recruiterId;
+    const recruiterId = req.user.userInfo.id;
     const recruiter = await Recruiter.findById(recruiterId);
     if (!recruiter) {
       return res.status(400).json({ message: "You are not a recruiter" });
@@ -55,7 +55,7 @@ const postJob = async (req, res) => {
 const updatePostedJob = async (req, res) => {
   try {
     const { jobId } = req.params;
-    const recruiterId = req.user.recruiterId;
+    const recruiterId = req.user.userInfo.id;
 
     const job = await Job.findById(jobId);
     if (!job) {
@@ -134,7 +134,7 @@ const updatePostedJob = async (req, res) => {
 const deletePostedJob = async (req, res) => {
   try {
     const jobId = req.params.jobId;
-    const recruiterId = req.user.recruiterId;
+    const recruiterId = req.user.userInfo.id;
 
     const job = await Job.findById(jobId);
     if (!job) {
@@ -178,7 +178,7 @@ const getPostedJobsByStatus = async (req, res) => {
   try {
     const { status = "open", page = 1, limit = 10 } = req.query;
 
-    const recruiterId = req.user.recruiterId;
+    const recruiterId = req.user.userInfo.id;
     const recruiter = await Recruiter.findById(recruiterId);
     if (!recruiter) {
       return res.status(400).json({ message: "You are not a recruiter" });
@@ -213,7 +213,7 @@ const getPostedJobsByStatus = async (req, res) => {
 
 const getPostedJobByID = async (req, res) => {
   try {
-    const recruiterId = req.user.recruiterId;
+    const recruiterId = req.user.userInfo.id;
     const jobId = req.params.jobId;
 
     const recruiter = await Recruiter.findById(recruiterId);
@@ -238,7 +238,7 @@ const getPostedJobByID = async (req, res) => {
 
 const closeJobVacancy = async (req, res) => {
   try {
-    const recruiterId = req.user.recruiterId;
+    const recruiterId = req.user.userInfo.id;
     const jobId = req.params.jobId;
 
     const recruiter = await Recruiter.findById(recruiterId);

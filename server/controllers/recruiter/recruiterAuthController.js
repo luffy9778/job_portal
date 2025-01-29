@@ -47,21 +47,21 @@ const recruiterLogin = async (req, res) => {
     const recruiter = await Recruiter.findOne({ email });
     if (!recruiter) {
       return res
-        .status(400)
+        .status(401)
         .json({ message: "Email or password is incorrect" });
     }
 
     const isValidPassword = await bcrypt.compare(password, recruiter.password);
     if (!isValidPassword) {
       return res
-        .status(400)
+        .status(401)
         .json({ message: "Email or password is incorrect" });
     }
 
     if (recruiter.status === "rejected") {
       return res
         .status(403)
-        .json({ message: "Your account has been rejected by the admin" });
+        .json({ message: "Your account has been blocked by the admin" });
     }
 
     if (recruiter.status === "pending") {
@@ -71,27 +71,28 @@ const recruiterLogin = async (req, res) => {
     }
 
     const accessToken = jwt.sign(
-      { recruiterId: recruiter._id },
+      { userInfo: { id: recruiter._id, role: recruiter.role } },
       process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: "1h",
       }
     );
     const refreshToken = jwt.sign(
-      { recruiterId: recruiter._id },
+      { id: recruiter._id,role:recruiter.role },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.cookie("recjwt", refreshToken, {
+    res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     });
     res.status(200).json({
       message: `${recruiter.name} logged in successfully`,
       accessToken,
+      role:recruiter.role
     });
   } catch (error) {
     console.error(error);
@@ -99,51 +100,49 @@ const recruiterLogin = async (req, res) => {
   }
 };
 
-const recruiterLogOut = async (req, res) => {
-  const cookies = req.cookies;
-  if (!cookies?.recjwt) {
-    return res.sendStatus(204);
-  }
-  res.clearCookie("recjwt", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  });
-  res.json({ message: "cookie cleared and logOut" });
-};
+// const recruiterLogOut = async (req, res) => {
+//   const cookies = req.cookies;
+//   if (!cookies?.recjwt) {
+//     return res.sendStatus(204);
+//   }
+//   res.clearCookie("jwt", {
+//     httpOnly: true,
+//     secure: true,
+//     sameSite: "none",
+//   });
+//   res.json({ message: "cookie cleared and logOut" });
+// };
 
-const recruiterRefresh = async (req, res) => {
-  const cookies = req.cookies;
-  if (!cookies || !cookies.recjwt) {
-    return res
-      .status(401)
-      .json({ message: "Please login first , unauthorized" });
-  }
-  const refreshToken = cookies.recjwt;
-  jwt.verify(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
-    async (err, recruiter) => {
-      if (err) {
-        return res.status(403).json({ message: "Invalid token" });
-      }
-      const foundRecruiter = await Recruiter.findById(recruiter.recruiterId);
-      if (!foundRecruiter) {
-        return res.status(404).json({ message: "Recruiter not found" });
-      }
-      const accessToken = jwt.sign(
-        { recruiterId: foundRecruiter._id },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "1h" }
-      );
-      res.json({ accessToken });
-    }
-  );
-};
+// const recruiterRefresh = async (req, res) => {
+//   const cookies = req.cookies;
+//   if (!cookies || !cookies.recjwt) {
+//     return res
+//       .status(401)
+//       .json({ message: "Please login first , unauthorized" });
+//   }
+//   const refreshToken = cookies.recjwt;
+//   jwt.verify(
+//     refreshToken,
+//     process.env.REFRESH_TOKEN_SECRET,
+//     async (err, recruiter) => {
+//       if (err) {
+//         return res.status(403).json({ message: "Invalid token" });
+//       }
+//       const foundRecruiter = await Recruiter.findById(recruiter.recruiterId);
+//       if (!foundRecruiter) {
+//         return res.status(404).json({ message: "Recruiter not found" });
+//       }
+//       const accessToken = jwt.sign(
+//         { recruiterId: foundRecruiter._id },
+//         process.env.ACCESS_TOKEN_SECRET,
+//         { expiresIn: "1h" }
+//       );
+//       res.json({ accessToken });
+//     }
+//   );
+// };
 
 module.exports = {
   recruiterSignUp,
   recruiterLogin,
-  recruiterRefresh,
-  recruiterLogOut,
 };

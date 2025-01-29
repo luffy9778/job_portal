@@ -7,7 +7,7 @@ const axios = require("axios");
 const applyForJob = async (req, res) => {
   try {
     const { jobId } = req.body;
-    const { userId } = req.user.userInfo;
+    const  userId  = req.user.userInfo.id;
 
     if (!jobId) {
       return res.status(400).json({ message: "Job ID is required" });

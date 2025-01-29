@@ -4,7 +4,9 @@ const User = require("../../models/User");
 const updateUserProfile = async (req, res) => {
   try {
     const { skills, experience } = req.body;
-    const { userId } = req.user.userInfo;
+    console.log(skills);
+
+    const userId = req.user.userInfo.id;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
@@ -13,17 +15,27 @@ const updateUserProfile = async (req, res) => {
       return res.status(400).json({ message: "Skills must be an array" });
     }
     if (skills?.length) {
-      user.skills = Array.from(new Set([...user.skills, ...skills]));
+      user.profile.skills = Array.from(
+        new Set([...user.profile.skills, ...skills])
+      );
     }
     if (experience?.length) {
       experience.forEach((exp) => {
-        const existingExperience = user.experience.find(
+        if (!exp.companyName || !exp.years) {
+          return res
+            .status(400)
+            .json({
+              message:
+                "Each experience entry must include companyName and years",
+            });
+        }
+        const existingExperience = user.profile.experience.find(
           (i) => i.companyName === exp.companyName
         );
         if (existingExperience) {
           existingExperience.years = exp.years;
         } else {
-          user.experience.push(exp);
+          user.profile.experience.push(exp);
         }
       });
     }
@@ -76,16 +88,16 @@ const updateUserProfile = async (req, res) => {
       }
     }
     await user.save();
-    res.json({ message: "Profile updated successfully" });
+    return res.json({ message: "Profile updated successfully" });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message });
   }
 };
 
 // const updateResume = async (req, res) => {
 //   try {
-//     const userId = req.user.userInfo.userId;
+//     const userId = req.user.userInfo.id;
 //     const user = await User.findById(userId);
 //     if (!user) {
 //       return res.status(404).json({ message: "User not found" });
