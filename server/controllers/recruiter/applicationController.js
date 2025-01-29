@@ -4,7 +4,7 @@ const Recruiter = require("../../models/Recruiter");
 
 const viewApplications = async (req, res) => {
   try {
-    const recruiterId = req.user.recruiterId;
+    const recruiterId = req.user.userInfo.id;
     const jobId = req.params.jobId;
 
     const recruiter = await Recruiter.findById(recruiterId);
@@ -51,7 +51,7 @@ const viewApplications = async (req, res) => {
 
 const updateApllicationStatus = async (req, res) => {
   try {
-    const recruiterId = req.user.recruiterId;
+    const recruiterId = req.user.userInfo.id;
     const applicationId = req.params.applicationId;
     const { status } = req.body;
 

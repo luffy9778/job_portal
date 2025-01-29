@@ -14,22 +14,22 @@ const adminLogin = async (req, res) => {
       return res.status(400).json({ message: "Invalid Email or Password" });
     }
     const accessToken = jwt.sign(
-      { adminId: admin._id },
+      { userInfo: { id: admin._id, role: admin.role } },
       process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: "1h",
       }
     );
     const refreshToken = jwt.sign(
-      { adminId: admin._id },
+      { id: admin._id,role:admin.role },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.cookie("adminjwt", refreshToken, {
+    res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     });
     res.status(200).json({

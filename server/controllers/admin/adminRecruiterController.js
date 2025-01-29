@@ -5,7 +5,7 @@ const { sendEmail } = require("../../services/emailService");
 const approveRecruiter = async (req, res) => {
   try {
     const recruiterId = req.params.id;
-    const admin = await Admin.findById(req.user.adminId);
+    const admin = await Admin.findById(req.user.userInfo.id);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -29,7 +29,7 @@ const approveRecruiter = async (req, res) => {
 const rejectRecruiter = async (req, res) => {
   try {
     const recruiterId = req.params.id;
-    const admin = await Admin.findById(req.user.adminId);
+    const admin = await Admin.findById(req.user.userInfo.id);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }

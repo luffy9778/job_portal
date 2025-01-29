@@ -7,9 +7,6 @@ import logo from '../../assets/linked.svg'
 function Home() {
   return (
   <>
-
-      {/* Navbar Section */}
-      <Navbaruser />
       <div className="font-sans" >
       {/* Hero Section */}
       <section className="text-center py-20 bg-gray-100">

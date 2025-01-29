@@ -11,12 +11,15 @@ const PORT = process.env.PORT || 3500;
 connectDB();
 app.use(cors(corsOptions));
 
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
 
 app.use("/welcome", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "welcome.html"));
 });
+
+//auth
+app.use("/auth",require("./routes/globalAuthRoutes"))
 
 //user
 app.use("/userAuth", require("./routes/user/userAuthRoutes"));
