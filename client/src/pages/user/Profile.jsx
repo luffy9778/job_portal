@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AuthContext  from "../../../src/context/AuthContext";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 function Profile() {
   const { user: loggedInUser } = useContext(AuthContext);
@@ -103,9 +104,9 @@ function Profile() {
       <div className="mb-4">
         <strong>Resume:</strong>{" "}
         {user?.resume ? (
-          <a href={user.resume} target="_blank" rel="noopener noreferrer">
+          <Link to={user.resume} target="_blank" rel="noopener noreferrer">
             Download Resume
-          </a>
+          </Link>
         ) : (
           "No resume uploaded"
         )}

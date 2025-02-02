@@ -1,5 +1,6 @@
 import React from 'react'
 import logo from '../../assets/linked.svg'
+import { Link } from 'react-router-dom'
 
 const jobCard = () => {
   return (
@@ -30,10 +31,10 @@ const jobCard = () => {
         </div>
         <div className="flex justify-between items-center">
           <p className="text-lg font-bold text-gray-800">$500/Hour</p>
-          <a href="/jobDetails">
+          <Link to="/jobDetails">
           <button className="bg-orange-400 text-white text-sm font-medium py-2 px-4 rounded hover:bg-orange-500">
             Details
-          </button></a>
+          </button></Link>
         </div>
       </div>
   )
