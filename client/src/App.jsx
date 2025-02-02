@@ -14,6 +14,7 @@ import PersistLogin from "./components/PersistLogin";
 import RequiredAuth from "./components/RequiredAuth";
 import UserLayout from "./components/user/userLayout";
 import RecruiterLayout from "./components/recruiter/RecruiterLayout";
+import Profile from "./pages/user/Profile";
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
               <Route index element={<Home />} />
               <Route path="/jobDetails" element={<JobDetailsPage />} />
               <Route path="/jobSubmit" element={<JobApplicationForm />} />
+              <Route path="/profile" element={<Profile/>} />
+
+
             </Route>
           </Route>
 
