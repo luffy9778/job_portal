@@ -67,14 +67,13 @@ function RecruiterHome() {
                 </p>
                 <p className="text-sm text-gray-600">
                   Resume:{" "}
-                  <a
-                    href={app.applications.resume_Url}
+                  <Link to={app.applications.resume_Url}
                     className="text-blue-500 underline"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     View Resume
-                  </a>
+                  </Link>
                 </p>
               </div>
               <div className="mt-4 md:mt-0">

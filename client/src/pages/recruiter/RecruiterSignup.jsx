@@ -108,13 +108,12 @@ function RecruiterSignup() {
                             </div>
                         </form>
                         <div className="mt-4 flex items-center w-full text-center">
-                            <a
-                                href="/recruiterLogin"
+                            <Link to="/recruiterLogin"
                                 className="text-xs text-gray-500 capitalize text-center w-full"
                             >
                                 Already have an account?
                                 <span className="text-orange-400"> Login</span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@ import Navbaruser from '../../components/Navbaruser'
 import JobCard from '../../components/user/JobCard'
 import Footer from '../../components/Footer'
 import logo from '../../assets/linked.svg'
+import { Link } from 'react-router-dom'
 
 function Home() {
   return (
@@ -31,22 +32,22 @@ function Home() {
           <div className="border border-gray-300 rounded p-4 w-48 bg-white shadow hover:shadow-lg">
             <h3 className="font-bold text-lg mb-2">Software & Data</h3>
             <p className="text-gray-600">121 jobs</p>
-            <a href="#" className="text-orange-500 hover:underline">Explore Jobs →</a>
+            <Link to="#" className="text-orange-500 hover:underline">Explore Jobs →</Link>
           </div>
           <div className="border border-gray-300 rounded p-4 w-48 bg-white shadow hover:shadow-lg">
             <h3 className="font-bold text-lg mb-2">Sales</h3>
             <p className="text-gray-600">110 jobs</p>
-            <a href="#" className="text-orange-500 hover:underline">Explore Jobs →</a>
+            <Link to="#" className="text-orange-500 hover:underline">Explore Jobs →</Link>
           </div>
           <div className="border border-gray-300 rounded p-4 w-48 bg-white shadow hover:shadow-lg">
             <h3 className="font-bold text-lg mb-2">Health & Safety</h3>
             <p className="text-gray-600">200 jobs</p>
-            <a href="#" className="text-orange-500 hover:underline">Explore Jobs →</a>
+            <Link to="#" className="text-orange-500 hover:underline">Explore Jobs →</Link>
           </div>
           <div className="border border-gray-300 rounded p-4 w-48 bg-white shadow hover:shadow-lg">
             <h3 className="font-bold text-lg mb-2">Admin & Office</h3>
             <p className="text-gray-600">150 jobs</p>
-            <a href="#" className="text-orange-500 hover:underline">Explore Jobs →</a>
+            <Link to="#" className="text-orange-500 hover:underline">Explore Jobs →</Link>
           </div>
         </div>
       </section>
