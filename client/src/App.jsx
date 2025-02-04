@@ -14,7 +14,7 @@ import PersistLogin from "./components/PersistLogin";
 import RequiredAuth from "./components/RequiredAuth";
 import UserLayout from "./components/user/userLayout";
 import RecruiterLayout from "./components/recruiter/RecruiterLayout";
-import Profile from "./pages/user/Profile";
+import Profile from "./pages/user/profile/Profile";
 import RecruiterViewJobs from "./pages/recruiter/RecruiterViewJobs";
 
 function App() {
