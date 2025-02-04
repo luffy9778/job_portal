@@ -2,13 +2,16 @@ import React from "react";
 import Navbaruser from "../Navbaruser";
 import { Outlet } from "react-router-dom";
 import { UserProvider } from "../../context/UserContext";
+import { UserJobSearchProvider } from "../../context/UserJobSearchContext";
 
 const UserLayout = () => {
   return (
     <>
       <UserProvider>
-        <Navbaruser />
-        <Outlet />
+        <UserJobSearchProvider>
+          <Navbaruser />
+          <Outlet />
+        </UserJobSearchProvider>
       </UserProvider>
     </>
   );
