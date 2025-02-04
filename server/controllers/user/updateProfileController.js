@@ -4,7 +4,7 @@ const User = require("../../models/User");
 const updateUserProfile = async (req, res) => {
   try {
     const { skills, experience } = req.body;
-    console.log(skills);
+    console.log(skills,experience);
 
     const userId = req.user.userInfo.id;
     const user = await User.findById(userId);
@@ -14,31 +14,26 @@ const updateUserProfile = async (req, res) => {
     if (skills && !Array.isArray(req.body.skills)) {
       return res.status(400).json({ message: "Skills must be an array" });
     }
-    if (skills?.length) {
-      user.profile.skills = Array.from(
-        new Set([...user.profile.skills, ...skills])
-      );
+    if (skills) {
+      user.profile.skills = skills; // Overwrite with the new array, even if it's empty
     }
-    if (experience?.length) {
-      experience.forEach((exp) => {
-        if (!exp.companyName || !exp.years) {
-          return res
-            .status(400)
-            .json({
-              message:
-                "Each experience entry must include companyName and years",
-            });
+    if (experience) {
+      if (!Array.isArray(experience)) {
+        return res.status(400).json({
+          message: "Invalid data format: experience must be an array",
+        });
+      }
+    
+      for (const exp of experience) {
+        if (!exp.companyName?.trim() || !exp.years?.toString().trim()) {
+          return res.status(400).json({
+            message: "Each experience entry must include companyName and years",
+          });
         }
-        const existingExperience = user.profile.experience.find(
-          (i) => i.companyName === exp.companyName
-        );
-        if (existingExperience) {
-          existingExperience.years = exp.years;
-        } else {
-          user.profile.experience.push(exp);
-        }
-      });
+      }
+          user.profile.experience = experience;
     }
+    
     if (req.file) {
       const file = req.file;
 
@@ -95,6 +90,20 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  try {
+    const userId = req.user.userInfo.id;
+    const user = await User.findById(userId).select("-password -applications");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // const updateResume = async (req, res) => {
 //   try {
 //     const userId = req.user.userInfo.id;
@@ -131,4 +140,4 @@ const updateUserProfile = async (req, res) => {
 //   }
 // };
 
-module.exports = { updateUserProfile };
+module.exports = { updateUserProfile, getUser };
