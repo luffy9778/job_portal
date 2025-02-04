@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import UserContext from "../../../../context/UserContext";
 
 const UpdateProfileForm = ({ setUpdate, userData }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const { fetchUserData } = useContext(UserContext);
 
@@ -85,15 +86,13 @@ const UpdateProfileForm = ({ setUpdate, userData }) => {
       return;
     }
     const updatedData = {};
-console.log("skills=",JSON.stringify(skills))
-console.log("user skills=",JSON.stringify(userData?.profile?.skills))
+
     if (
       JSON.stringify(userData?.profile?.skills || []) !== JSON.stringify(skills)
     ) {
       updatedData.skills = skills;
     }
-console.log("user experinece=",JSON.stringify(userData?.profile?.experience))
-console.log("experinece=",JSON.stringify(experience))
+
     if (
       JSON.stringify(userData?.profile?.experience || []) !==
       JSON.stringify(experience)
@@ -114,6 +113,7 @@ console.log("experinece=",JSON.stringify(experience))
       return;
     }
     try {
+      setIsLoading(true);
       await axiosPrivate.post(
         "http://localhost:3500/user/updateProfile",
         updatedData,
@@ -138,47 +138,57 @@ console.log("experinece=",JSON.stringify(experience))
         footer: '<a href="#">Why do I have this issue?</a>',
       });
     } finally {
+      setIsLoading(false);
       fetchUserData();
     }
   };
   return (
-    <div>
-      <UpdateSkills
-        skills={skills}
-        setSkills={setSkills}
-        skillErrors={skillErrors}
-        setSkillErrors={setSkillErrors}
-      />
-      <UpdateExperience
-        experience={experience}
-        setExperience={setExperience}
-        experienceErrors={experienceErrors}
-        setExperienceErrors={setExperienceErrors}
-      />
+    <div className="relative">
+      {/* Loading spinner */}
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+          <div className="w-16 h-16 border-4 border-t-transparent border-orange-600 rounded-full animate-spin"></div>
+        </div>
+      )}
 
-      <UpdateResume
-        setResume={setResume}
-        resumeUploadError={resumeUploadError}
-        setResumeUploadError={setResumeUploadError}
-      />
-      <div className="text-center mt-6">
-        <button
-          className={`${
-            resumeUploadError
-              ? "bg-orange-200 cursor-not-allowed"
-              : "bg-orange-400  hover:bg-orange-500"
-          } text-white px-4 py-2 rounded-lg mr-2`}
-          onClick={handleUpdate}
-          disabled={resumeUploadError}
-        >
-          Save
-        </button>
-        <button
-          className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
-          onClick={() => setUpdate(false)}
-        >
-          Cancel
-        </button>
+      <div>
+        <UpdateSkills
+          skills={skills}
+          setSkills={setSkills}
+          skillErrors={skillErrors}
+          setSkillErrors={setSkillErrors}
+        />
+        <UpdateExperience
+          experience={experience}
+          setExperience={setExperience}
+          experienceErrors={experienceErrors}
+          setExperienceErrors={setExperienceErrors}
+        />
+
+        <UpdateResume
+          setResume={setResume}
+          resumeUploadError={resumeUploadError}
+          setResumeUploadError={setResumeUploadError}
+        />
+        <div className="text-center mt-6">
+          <button
+            className={`${
+              resumeUploadError
+                ? "bg-orange-200 cursor-not-allowed"
+                : "bg-orange-400  hover:bg-orange-500"
+            } text-white px-4 py-2 rounded-lg mr-2`}
+            onClick={handleUpdate}
+            disabled={resumeUploadError}
+          >
+            Save
+          </button>
+          <button
+            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+            onClick={() => setUpdate(false)}
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );

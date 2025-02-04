@@ -16,6 +16,7 @@ import UserLayout from "./components/user/userLayout";
 import RecruiterLayout from "./components/recruiter/RecruiterLayout";
 import Profile from "./pages/user/profile/Profile";
 import RecruiterViewJobs from "./pages/recruiter/RecruiterViewJobs";
+import Serach from "./pages/user/Serach";
 
 function App() {
   return (
@@ -28,9 +29,10 @@ function App() {
           <Route element={<RequiredAuth allowedRoles="user" />}>
             <Route path="/" element={<UserLayout />}>
               <Route index element={<Home />} />
-              <Route path="/jobDetails" element={<JobDetailsPage />} />
+              <Route path="/jobDetails/:id" element={<JobDetailsPage />} />
               <Route path="/jobSubmit" element={<JobApplicationForm />} />
               <Route path="/profile" element={<Profile/>} />
+              <Route path="/search" element={<Serach/>} />
 
 
             </Route>

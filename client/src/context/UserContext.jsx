@@ -5,7 +5,7 @@ const UserContext = createContext({});
 export const UserProvider = ({ children }) => {
   const axiosPrivate = useAxiosPrivate();
   const [userData, setUserData] = useState("");
-  console.log(userData)
+  // console.log(userData)
   const fetchUserData = async () => {
     try {
       const response = await axiosPrivate.get("/user/profile");

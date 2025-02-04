@@ -28,7 +28,7 @@ const recruiterSchema = new mongoose.Schema(
       description: {
         type: String,
       },
-      logo: {
+      logo_Url: {
         type: String, // URL or file path of the company logo
       },
     },

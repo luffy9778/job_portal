@@ -42,6 +42,7 @@ const postJob = async (req, res) => {
         min: minSallary,
         max: maxSallary,
       },
+      company:recruiter.company.name,
       recruiterId,
     });
     res.status(201).json({ message: "Job posted successfully", job: job });

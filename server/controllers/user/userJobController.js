@@ -7,7 +7,7 @@ const axios = require("axios");
 const applyForJob = async (req, res) => {
   try {
     const { jobId } = req.body;
-    const  userId  = req.user.userInfo.id;
+    const userId = req.user.userInfo.id;
 
     if (!jobId) {
       return res.status(400).json({ message: "Job ID is required" });
@@ -109,4 +109,76 @@ const applyForJob = async (req, res) => {
   }
 };
 
-module.exports = { applyForJob };
+const serchJob = async (req, res) => {
+  try {
+    const { query, location, page = 1, limit = 10 } = req.query;
+    const filter = {};
+    if (query) {
+      filter.$or = [
+        { title: { $regex: query, $options: "i" } },
+        { company: { $regex: query, $options: "i" } },
+      ];
+    }
+    if (location) {
+      filter.location = { $regex: location, $options: "i" };
+    }
+    const jobs = await Job.find(filter)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .populate("recruiterId", "name company.logo_Url");
+
+    const totalJobs = await Job.countDocuments(filter);
+
+    res.json({
+      jobs,
+      totalPages: Math.ceil(totalJobs / limit),
+      currentPage: Number(page),
+      totalJobs,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to search job" });
+  }
+};
+
+const getJobById = async (req, res) => {
+  try {
+    const userId = req.user.userInfo.id;
+    const { jobId } = req.params;
+    const job = await Job.findById(jobId).populate(
+      "recruiterId",
+      "name company.logo"
+    );
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    const application = await Application.findOne({ userId, jobId });
+    let responseData = { job, isApplayed: false };
+    if (application) {
+      responseData.isApplayed = true;
+      responseData.apllicationStatus = application.status;
+    }
+
+    res.status(200).json(responseData);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to get job by id" });
+  }
+};
+
+const getDummyJob = async (req, res) => {
+  try {
+    const jobs = await Job.find()
+      .sort({ createdAt: -1 })
+      .limit(8)
+      .populate("recruiterId", "name company.logo");
+    if (!jobs) {
+      return res.status(404).json({ message: "No jobs found" });
+    }
+    res.status(200).json(jobs);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to get dummy job" });
+  }
+};
+
+module.exports = { applyForJob, serchJob, getJobById,getDummyJob };

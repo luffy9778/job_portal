@@ -19,7 +19,6 @@ const refresh = async (req, res) => {
         return res.status(403).json({ message: "Invalid token" });
       }
       const { id, role } = decoded;
-      console.log(decoded)
       let foundUser;
       if (role === "user") {
         foundUser = await User.findById(id);
