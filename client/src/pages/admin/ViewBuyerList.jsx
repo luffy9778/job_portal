@@ -7,4 +7,4 @@ function ViewBuyerList() {
   )
 }
 
-export default ViewBuyerList
+export default ViewBuyerList;

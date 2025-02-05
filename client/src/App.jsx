@@ -33,6 +33,13 @@ function App() {
               <Route path="/jobSubmit" element={<JobApplicationForm />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Serach />} />
+              <Route path="/profile" element={<Profile/>} />
+              <Route path="/search" element={<Serach/>} />
+              <Route path="/jobApply" element={<JobApplicationForm/>} />
+
+
+
+
             </Route>
           </Route>
 
