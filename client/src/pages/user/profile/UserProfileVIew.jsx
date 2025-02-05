@@ -3,61 +3,61 @@ import React from "react";
 const UserProfileVIew = ({ userData, setUpdate }) => {
   return (
     <>
-      <div className="mb-4">
-        <strong>Name:</strong> {userData?.firstName} {userData?.lastName}
-      </div>
+       <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 mt-10">
 
-      <div className="mb-4">
+      {/* Profile Info Section */}
+      <div className="space-y-4">
+        <div className="bg-gray-100 p-4 rounded-lg">
+          <strong className="text-gray-700">Name:</strong>{" "}
+          <span className="text-gray-900">{userData?.firstName} {userData?.lastName}</span>
+        </div>
+
+        {/* Skills Section */}
         {userData?.profile?.skills?.length > 0 && (
-          <>
-            <strong>Skills:</strong> {userData?.profile?.skills?.join(", ")}
-          </>
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <strong className="text-gray-700">Skills:</strong>{" "}
+            <span className="text-gray-900">{userData?.profile?.skills?.join(", ")}</span>
+          </div>
         )}
-      </div>
 
-      <div className="mb-4">
+        {/* Experience Section */}
         {userData?.profile?.experience?.length > 0 && (
-          <>
-            <strong>Experience:</strong>
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <strong className="text-gray-700">Experience:</strong>
             {userData?.profile?.experience?.map((exp, index) => (
-              <div key={index}>
-                {exp.companyName} - {exp.years} years
+              <div key={index} className="text-gray-900 mt-1">
+                <span className="font-medium">{exp.companyName}</span> - {exp.years} years
               </div>
             ))}
-          </>
+          </div>
         )}
-      </div>
 
-      <div className="mb-4">
+        {/* Resume Section */}
         {userData?.profile?.resume_Url && (
-          <>
-            <strong>Resume: </strong>
-            {/* {userData?.profile?.resume_Url
-              .split("/")
-              .pop()
-              .split("-")
-              .slice(1)
-              .join("-")} */}
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <strong className="text-gray-700">Resume:</strong>{" "}
             <a
               href={userData?.profile?.resume_Url}
               target="_blank"
               rel="noopener noreferrer"
+              className="text-blue-600 hover:underline font-medium"
             >
-              {" "}
-              <span className="text-blue-700">View Resume </span>
+              View Resume
             </a>
-          </>
+          </div>
         )}
       </div>
 
+      {/* Update Profile Button */}
       <div className="text-center mt-6">
         <button
-          className="bg-orange-400 text-white px-4 py-2 rounded-lg hover:bg-orange-500"
+          className="bg-orange-500 text-white font-semibold px-5 py-2 rounded-lg hover:bg-orange-600 transition"
           onClick={() => setUpdate(true)}
         >
           Update Profile
         </button>
       </div>
+    </div>
     </>
   );
 };
