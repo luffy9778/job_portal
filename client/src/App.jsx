@@ -24,7 +24,6 @@ function App() {
     <>
       <Routes>
         <Route element={<PersistLogin />}>
-
           {/* user protected routes */}
 
           <Route element={<RequiredAuth allowedRoles="user" />}>
@@ -32,10 +31,8 @@ function App() {
               <Route index element={<Home />} />
               <Route path="/jobDetails/:id" element={<JobDetailsPage />} />
               <Route path="/jobSubmit" element={<JobApplicationForm />} />
-              <Route path="/profile" element={<Profile/>} />
-              <Route path="/search" element={<Serach/>} />
-
-
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/search" element={<Serach />} />
             </Route>
           </Route>
 
@@ -44,8 +41,8 @@ function App() {
           <Route element={<RequiredAuth allowedRoles="recruiter" />}>
             <Route path="/recruiter" element={<RecruiterLayout />}>
               <Route index element={<RecruiterHome />} />
-              <Route path="jobview" element={<RecruiterViewJobs/>}/>
-              <Route path="viewapplication/:id" element={<ApplicationView/>}/>
+              <Route path="jobview" element={<RecruiterViewJobs />} />
+              <Route path="viewapplication/:id" element={<ApplicationView />} />
             </Route>
           </Route>
 
