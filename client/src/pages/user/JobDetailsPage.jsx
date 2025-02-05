@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
@@ -120,7 +120,7 @@ const JobDetailsPage = () => {
 
         {/* Application Button */}
         <div className="flex justify-end mt-6">
-          <button
+          <Link to="/jobApply"><button
             className={`${
               jobData?.isApplayed || jobData?.job?.status === "closed"
                 ? "opacity-50 cursor-not-allowed"
@@ -134,7 +134,7 @@ const JobDetailsPage = () => {
               : jobData?.isApplayed
               ? "Already applayed"
               : "Apply Now"}
-          </button>
+          </button></Link>
         </div>
       </div>
     </div>
