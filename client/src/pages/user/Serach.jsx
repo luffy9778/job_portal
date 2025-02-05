@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import UserJobSearchContext from "../../context/UserJobSearchContext";
 import JobCard from "../../components/user/JobCard";
 import { Oval } from "react-loader-spinner";
+import OvalLoadingSpinner from "../../components/spinners/OvalLoadingSpinner";
 
 const Serach = () => {
   const {
@@ -49,15 +50,7 @@ const Serach = () => {
       <div className="md:px-4">
       {isloading ? (
         <div className="flex justify-center items-center">
-          <Oval
-            visible={true}
-            height="40"
-            width="40"
-            color="#e65e10"
-            ariaLabel="oval-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-          />
+          <OvalLoadingSpinner/>
         </div>
       ):
         <section id="jobs">
