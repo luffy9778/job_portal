@@ -35,6 +35,7 @@ const viewApplications = async (req, res) => {
       message: "Applications fetched successfully.",
       job: job.title,
       applications: applications.map((i) => ({
+        id: i._id,
         applicantName: i.userId.firstName,
         applicantEmail: i.userId.email,
         applicantPhone: i.userId.phone,
