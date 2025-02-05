@@ -29,6 +29,7 @@ app.use("/userJob", require("./routes/user/userJobRoutes"));
 //recruiter
 app.use("/recruiterAuth", require("./routes/recruiter/recruiterAuthRoutes"));
 app.use("/job", require("./routes/recruiter/jobRoutes"));
+app.use("/application", require("./routes/recruiter/applicationRoutes"));
 
 //admin
 app.use("/adminAuth", require("./routes/admin/adminAuthRoutes"));
