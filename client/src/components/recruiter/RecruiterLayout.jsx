@@ -5,8 +5,10 @@ import { Outlet } from "react-router-dom";
 const RecruiterLayout = () => {
   return (
     <>
-      <RecruiterNavbar />
-      <Outlet />
+      <div className=" h-screen overflow-y-auto">
+        <RecruiterNavbar />
+        <Outlet />
+      </div>
     </>
   );
 };
