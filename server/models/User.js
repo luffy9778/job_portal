@@ -46,25 +46,26 @@ const userSchema = new mongoose.Schema(
           },
           years: {
             type: Number, // Number of years worked at the company
-            min:1,
+            min: 1,
             // max?
           },
         },
       ],
     },
-    applications: [
-      {
-        jobId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Job",
-        },
-        status: {
-          type: String,
-          enum: ["applied", "shortlisted", "rejected", "hired"],
-          default: "applied",
-        },
-      },
-    ],
+    savedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }],
+    // applications: [
+    //   {
+    //     jobId: {
+    //       type: mongoose.Schema.Types.ObjectId,
+    //       ref: "Job",
+    //     },
+    //     status: {
+    //       type: String,
+    //       enum: ["applied", "shortlisted", "rejected", "hired"],
+    //       default: "applied",
+    //     },
+    //   },
+    // ],
   },
   {
     timestamps: true,
