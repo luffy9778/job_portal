@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import UserJobSearchContext from "../../context/UserJobSearchContext";
 import JobCard from "../../components/user/JobCard";
-import { Oval } from "react-loader-spinner";
 import OvalLoadingSpinner from "../../components/spinners/OvalLoadingSpinner";
+import PaginationBar from "../../components/pagination/PaginationBar";
 
 const Serach = () => {
   const {
@@ -13,6 +13,9 @@ const Serach = () => {
     handleSearch,
     searchResult,
     isloading,
+    currentPage,
+    setCurrentPage,
+    totalPages,
   } = useContext(UserJobSearchContext);
   return (
     <div className="font-sans">
@@ -48,23 +51,34 @@ const Serach = () => {
       </section>
 
       <div className="md:px-4">
-      {isloading ? (
-        <div className="flex justify-center items-center">
-          <OvalLoadingSpinner/>
-        </div>
-      ):
-        <section id="jobs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
-            {searchResult?.jobs?.length === 0 && (
+        {isloading ? (
+          <div className="flex justify-center items-center">
+            <OvalLoadingSpinner />
+          </div>
+        ) : (
+          <section id="jobs">
+            {!searchResult?.jobs?.length ? (
               <div className="col-span-full text-center mt-32 md:mt-40">
                 <p className="text-lg text-gray-600">No jobs found...</p>
               </div>
-            )}{" "}
-            {searchResult?.jobs?.map((i) => (
-              <JobCard key={i._id} job={i} />
-            ))}
-          </div>
-        </section>}
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
+                  {searchResult?.jobs?.map((i) => (
+                    <JobCard key={i._id} job={i} />
+                  ))}
+                </div>
+                <div className="relative pt-9 w-full  text-white">
+                  <PaginationBar
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
+                </div>{" "}
+              </>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );

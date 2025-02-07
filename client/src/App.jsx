@@ -18,6 +18,9 @@ import Profile from "./pages/user/profile/Profile";
 import RecruiterViewJobs from "./pages/recruiter/RecruiterViewJobs";
 import Serach from "./pages/user/Serach";
 import ApplicationView from "./pages/recruiter/ApplicationView";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashBoard from "./pages/admin/AdminDashBoard";
+import MyJobs from "./pages/user/MyJobs";
 
 function App() {
   return (
@@ -30,16 +33,13 @@ function App() {
             <Route path="/" element={<UserLayout />}>
               <Route index element={<Home />} />
               <Route path="/jobDetails/:id" element={<JobDetailsPage />} />
-              <Route path="/jobSubmit" element={<JobApplicationForm />} />
+              {/* <Route path="/jobSubmit" element={<JobApplicationForm />} /> */}
               <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Serach />} />
-              <Route path="/profile" element={<Profile/>} />
-              <Route path="/search" element={<Serach/>} />
-              <Route path="/jobApply" element={<JobApplicationForm/>} />
-
-
-
-
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/search" element={<Serach />} />
+              <Route path="/jobApply/:id" element={<JobApplicationForm />} />
+              <Route path="/myjobs" element={<MyJobs />} />
             </Route>
           </Route>
 
@@ -55,8 +55,11 @@ function App() {
 
           {/* admin protected routes */}
 
-          <Route element={<RequiredAuth allowedRoles="admin" />}>
-            <Route path="/admin/viewlist" element={<ViewRecruiterList />} />
+          <Route element={<RequiredAuth allowedRoles="admin"/>}>
+            <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashBoard />} />
+            <Route path="viewlist" element={<ViewRecruiterList />} />
+            </Route>
           </Route>
         </Route>
 

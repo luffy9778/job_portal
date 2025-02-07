@@ -6,6 +6,7 @@ import OvalLoadingSpinner from "../../components/spinners/OvalLoadingSpinner";
 
 function RecruiterViewJobs() {
   const [postedJobs, setPostedJobs] = useState([]);
+  console.log(postedJobs);
   const [status, setStatus] = useState("open");
   const axiosPrivate = useAxiosPrivate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,23 +14,36 @@ function RecruiterViewJobs() {
   const [isLoading, setIsLoading] = useState(false);
 
   const limit = 10;
+
+  const fetchPostedJobs = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axiosPrivate.get(
+        `/job?status=${status}&page=${currentPage}&limit=${limit}`
+      );
+      setPostedJobs(response?.data);
+      setTotalPages(response?.data?.pagination?.totalPages);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPostedJobs = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axiosPrivate.get(
-          `/job?status=${status}&page=${currentPage}&limit=${limit}`
-        );
-        setPostedJobs(response?.data);
-        setTotalPages(response?.data?.pagination?.totalPages);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchPostedJobs();
   }, [status, currentPage]);
+
+  const handleClose = async (jobId) => {
+    try {
+      const response = await axiosPrivate.patch(`job/close/${jobId}`);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      fetchPostedJobs();
+    }
+  };
   return (
     <>
       <div className="h-screen flex flex-col">
@@ -68,11 +82,22 @@ function RecruiterViewJobs() {
           ) : (
             <>
               {postedJobs?.jobs?.map((i) => (
-                <div className="py-4 px-4 md:px-16 bg-white rounded-xl shadow-md mx-2 md:mx-20 flex justify-between mb-5">
+                <div className="py-4 px-4 md:px-16 bg-white rounded-xl shadow-md mx-2 md:mx-20 flex justify-between items-center mb-5 text-sm md:text-base">
                   <div className="text-xl font-semibold text-gray-800">
                     {i.title}{" "}
                   </div>
-                  <div className="">
+                  <div className=" flex items-center">
+                    {i?.status === "open" && (
+                      <div className=" pr-2 md:pr-8">
+                        <button
+                          className="p-1 md:px-4 md:py-2 rounded-lg bg-red-600 text-white hover:scale-105 "
+                          onClick={() => handleClose(i._id)}
+                        >
+                          close job
+                        </button>
+                      </div>
+                    )}
+
                     <Link
                       to={`/recruiter/viewapplication/${i._id}`}
                       className="text-orange-500 hover:text-orange-600 font-medium"

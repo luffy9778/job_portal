@@ -5,6 +5,7 @@ import UpdateResume from "./UpdateResume";
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import Swal from "sweetalert2";
 import UserContext from "../../../../context/UserContext";
+import BgBlurSpinner from "../../../../components/spinners/BgBlurSpinner";
 
 const UpdateProfileForm = ({ setUpdate, userData }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -146,9 +147,7 @@ const UpdateProfileForm = ({ setUpdate, userData }) => {
     <div className="relative">
       {/* Loading spinner */}
       {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
-          <div className="w-16 h-16 border-4 border-t-transparent border-orange-600 rounded-full animate-spin"></div>
-        </div>
+        <BgBlurSpinner/>
       )}
 
       <div>

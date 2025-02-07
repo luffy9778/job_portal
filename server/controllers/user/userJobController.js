@@ -167,7 +167,7 @@ const getJobById = async (req, res) => {
 
 const getDummyJob = async (req, res) => {
   try {
-    const jobs = await Job.find()
+    const jobs = await Job.find({ status: { $ne: "closed" } })
       .sort({ createdAt: -1 })
       .limit(8)
       .populate("recruiterId", "name company.logo");
@@ -181,4 +181,99 @@ const getDummyJob = async (req, res) => {
   }
 };
 
-module.exports = { applyForJob, serchJob, getJobById,getDummyJob };
+const getAppliedJobs = async (req, res) => {
+  try {
+    const userId = req.user.userInfo.id;
+    const jobs = await Application.find({ userId })
+      .select("jobId status createdAt")
+      .populate({
+        path: "jobId",
+        select: "title company location recruiterId status",
+        populate: {
+          path: "recruiterId",
+          select: "company.logo_url",
+        },
+      });
+    if (!jobs) {
+      return res.status(404).json({ message: "No jobs found" });
+    }
+    res.status(200).json(jobs);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to get applied jobs" });
+  }
+};
+
+const getSavedJobs = async (req, res) => {
+  try {
+    const userId = req.user.userInfo.id;
+    const user = await User.findById(userId).populate({
+      path: "savedJobs",
+      select: "title company location recruiterId status",
+      populate: {
+        path: "recruiterId",
+        select: "company.logo_url",
+      },
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user.savedJobs);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to get saved jobs" });
+  }
+};
+
+const saveJob = async (req, res) => {
+  try {
+    const userId = req.user.userInfo.id;
+    const { jobId } = req.body;
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+    //save the job id in user model in saved jobs
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { savedJobs: jobId } },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json({ message: "Job saved successfully" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to save job" });
+  }
+};
+
+const removeSavedJob = async (req, res) => {
+  try {
+    const userId = req.user.userInfo.id;
+    const { jobId } = req.params;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { savedJobs: jobId } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Job removed from saved jobs" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  applyForJob,
+  serchJob,
+  getJobById,
+  getDummyJob,
+  getAppliedJobs,
+  saveJob,
+  removeSavedJob,
+  getSavedJobs
+};

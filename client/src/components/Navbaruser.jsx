@@ -1,17 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import navicon from "../assets/icons8-swagbucks.svg";
 import profilePic from "../assets/avathar.svg";
 import { Link, useParams } from "react-router-dom";
 
 function Navbaruser() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [showButton, setShowButton] = useState(false);
   const params = useParams();
-  
+
+  // Dropdown references
+  const profileDropdownRef = useRef(null);
+
+  // Close dropdowns when the route changes
   useEffect(() => {
     setIsProfileOpen(false);
   }, [params]);
 
-  const [showButton, setShowButton] = useState(false);
+  // Click outside handler
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
+        setIsProfileOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 relative">
@@ -70,71 +90,55 @@ function Navbaruser() {
             </li>
             <li>
               <Link
-                to="/jobs"
+                to="/myjobs"
                 className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-700 md:p-0 dark:text-white md:dark:hover:text-orange-500"
               >
-                Jobs
+                My jobs
               </Link>
             </li>
-            {/* <li>
-              <Link
-                to="/login"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-700 md:p-0 dark:text-white md:dark:hover:text-orange-500"
+
+            {/* Profile Dropdown */}
+            <li className="relative" ref={profileDropdownRef}>
+              <button
+                className="flex items-center space-x-2"
+                onClick={() => setIsProfileOpen((prev) => !prev)}
               >
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/signup"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-700 md:p-0 dark:text-white md:dark:hover:text-orange-500"
-              >
-                Signup
-              </Link>
-            </li> */}
-            <li>
-              <div className="relative">
-                <button
-                  className="flex items-center space-x-2"
-                  onClick={() => setIsProfileOpen((prev) => !prev)}
-                >
-                  <img
-                    src={profilePic}
-                    alt="Profile"
-                    className="h-8 w-8 rounded-full border"
-                  />
-                </button>
-                {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-                    <ul className="py-2 text-gray-700 dark:text-gray-200">
-                      <li>
-                        <Link
-                          to="/profile"
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/settings"
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          Settings
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/logout"
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          Logout
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
+                <img
+                  src={profilePic}
+                  alt="Profile"
+                  className="h-8 w-8 rounded-full border"
+                />
+              </button>
+              {isProfileOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+                  <ul className="py-2 text-gray-700 dark:text-gray-200">
+                    <li>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/settings"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Settings
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/logout"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Logout
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </li>
           </ul>
         </div>

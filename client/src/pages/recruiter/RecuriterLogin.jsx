@@ -77,7 +77,7 @@ function RecuriterLogin() {
         <div className="flex bg-white rounded-lg shadow-lg border overflow-hidden max-w-sm lg:max-w-4xl w-1/3">
           <div className="p-8 w-full">
             <p className="text-xl font-bold text-gray-600 text-center py-4">
-              Welcome back!
+              Recruiter Login
             </p>
             {errMsg && (
               <div
@@ -146,7 +146,7 @@ function RecuriterLogin() {
             </form>
             <div className="mt-4 flex items-center w-full text-center">
               <Link
-                to="/signup"
+                to="/recruiterSignup"
                 className="text-xs text-gray-500 capitalize text-center w-full"
               >
                 Don&apos;t have any account yet?{" "}
