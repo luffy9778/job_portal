@@ -33,7 +33,7 @@ app.use("/application", require("./routes/recruiter/applicationRoutes"));
 
 //admin
 app.use("/adminAuth", require("./routes/admin/adminAuthRoutes"));
-app.use("/recruiters", require("./routes/admin/adminRecruiter"));
+app.use("/admin/recruiters", require("./routes/admin/adminRecruiter"));
 
 app.use("*", (req, res) => {
   if (req.accepts("html")) {

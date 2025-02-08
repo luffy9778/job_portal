@@ -14,7 +14,8 @@ const UpdateProfileForm = ({ setUpdate, userData }) => {
 
   const [skills, setSkills] = useState(userData?.profile?.skills || []);
   const [skillErrors, setSkillErrors] = useState([]);
-
+console.log("skill=",skills)
+console.log("skillerror=",skillErrors)
   const [experience, setExperience] = useState(
     userData?.profile?.experience || [{ companyName: "", years: "" }]
   );
@@ -34,7 +35,7 @@ const UpdateProfileForm = ({ setUpdate, userData }) => {
     }
   }, [userData]);
 
-  //validate skills
+  // validate skills
   const validateSkills = () => {
     let isValid = true;
     const newSkillErrors = skills.map((skill) =>
@@ -83,9 +84,12 @@ const UpdateProfileForm = ({ setUpdate, userData }) => {
   };
 
   const handleUpdate = async () => {
-    if (!validateExperience() || !validateSkills()) {
-      return;
-    }
+    const isExperienceValid = validateExperience();
+const isSkillsValid = validateSkills();
+
+if (!isExperienceValid || !isSkillsValid) {
+  return; // Stop execution if either one is invalid
+}
     const updatedData = {};
 
     if (
@@ -172,12 +176,12 @@ const UpdateProfileForm = ({ setUpdate, userData }) => {
         <div className="text-center mt-6">
           <button
             className={`${
-              resumeUploadError
+              resumeUploadError||skillErrors?.some(error => error.trim() !== "")
                 ? "bg-orange-200 cursor-not-allowed"
                 : "bg-orange-400  hover:bg-orange-500"
             } text-white px-4 py-2 rounded-lg mr-2`}
             onClick={handleUpdate}
-            disabled={resumeUploadError}
+            disabled={resumeUploadError||skillErrors.some(error => error.trim() !== "")}
           >
             Save
           </button>

@@ -8,7 +8,7 @@ import RecruiterSignup from "./pages/recruiter/RecruiterSignup";
 import RecruiterHome from "./pages/recruiter/RecruiterHome";
 import JobDetailsPage from "./pages/user/JobDetailsPage";
 import JobApplicationForm from "./pages/user/JobApplicationForm";
-import ViewRecruiterList from "./pages/admin/ViewRecruiterList";
+import ViewRecruiterList from "./pages/admin/recruiter/ViewRecruiterList";
 import AdminLogin from "./pages/admin/AdminLogin";
 import PersistLogin from "./components/PersistLogin";
 import RequiredAuth from "./components/RequiredAuth";

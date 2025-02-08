@@ -50,4 +50,74 @@ const rejectRecruiter = async (req, res) => {
   }
 };
 
-module.exports = { approveRecruiter, rejectRecruiter };
+const getAllRecruiter = async (req, res) => {
+  try {
+    const { query = "", limit = 10, page = 1, days } = req.query;
+
+    const admin = await Admin.findById(req.user.userInfo.id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    let dateFilter = {};
+    const today = new Date();
+    let pastDate = new Date();
+
+    if (days) {
+      switch (days) {
+        case "thisMonth":
+          pastDate = new Date(today.getFullYear(), today.getMonth(), 1);
+          break;
+        case "lastMonth":
+          pastDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+          today.setDate(0); // Last day of last month
+          break;
+        case "lastYear":
+          pastDate = new Date(today.getFullYear() - 1, 0, 1);
+          today.setFullYear(today.getFullYear() - 1, 11, 31);
+          break;
+        case "last7Days":
+          pastDate.setDate(today.getDate() - 7);
+          break;
+        case "lastDay":
+          pastDate.setDate(today.getDate() - 1);
+          break;
+        default:
+          pastDate.setDate(today.getDate() - 30); // Default last 30 days
+      }
+      dateFilter = { createdAt: { $gte: pastDate, $lte: today } };
+    }
+
+
+    const filter = query
+      ? {
+          $or: [
+            { name: { $regex: query, $options: "i" } },
+            { email: { $regex: query, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const perPage = parseInt(limit);
+    const currentPage = parseInt(page);
+
+    const recruiter = await Recruiter.find({ ...filter, ...dateFilter })
+      .sort({ createdAt: -1 })
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage);
+
+    const totalRecruiter = await Recruiter.countDocuments({ ...filter, ...dateFilter });
+
+    return res.json({
+      recruiter,
+      totalPages: Math.ceil(totalRecruiter / perPage),
+      currentPage,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+module.exports = { approveRecruiter, rejectRecruiter, getAllRecruiter };

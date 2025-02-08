@@ -1,4 +1,4 @@
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
@@ -6,12 +6,23 @@ const UpdateSkills = ({ skills, setSkills, skillErrors, setSkillErrors }) => {
   //skill handlers
   const handleSkillChange = (index, value) => {
     const newSkills = [...skills];
-    newSkills[index] = value;
-    setSkills(newSkills);
+    newSkills[index] = value.trim();
 
+    const isDuplicate=newSkills.filter(i=>i.toLowerCase()===value.toLowerCase().trim()).length>1
+    
     // Remove validation error if user types something
     const newSkillErrors = [...skillErrors];
-    newSkillErrors[index] = value.trim() ? "" : "Skill cannot be empty";
+    while (newSkillErrors.length < newSkills.length) {
+      newSkillErrors.push("");
+    }
+    if(!value.trim()){
+      newSkillErrors[index]="Skill cannot be empty"
+    }else if(isDuplicate){
+      newSkillErrors[index]="Duplicate skill not allowed"
+    }else{
+      newSkillErrors[index]=""
+    }
+    setSkills(newSkills)
     setSkillErrors(newSkillErrors);
   };
 
@@ -61,7 +72,7 @@ const UpdateSkills = ({ skills, setSkills, skillErrors, setSkillErrors }) => {
         className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700"
         onClick={handleAddSkill}
       >
-        Add Skill
+        <FontAwesomeIcon icon={faPlus}/> Add more skills
       </button>
     </div>
   );
