@@ -8,7 +8,6 @@ import RecruiterSignup from "./pages/recruiter/RecruiterSignup";
 import RecruiterHome from "./pages/recruiter/RecruiterHome";
 import JobDetailsPage from "./pages/user/JobDetailsPage";
 import JobApplicationForm from "./pages/user/JobApplicationForm";
-import ViewRecruiterList from "./pages/admin/recruiter/ViewRecruiterList";
 import AdminLogin from "./pages/admin/AdminLogin";
 import PersistLogin from "./components/PersistLogin";
 import RequiredAuth from "./components/RequiredAuth";
@@ -21,6 +20,8 @@ import ApplicationView from "./pages/recruiter/ApplicationView";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminDashBoard from "./pages/admin/AdminDashBoard";
 import MyJobs from "./pages/user/MyJobs";
+import ViewRecruiter from "./pages/admin/recruiter/ViewRecruiter";
+import VeiwUsers from "./pages/admin/user/VeiwUsers";
 
 function App() {
   return (
@@ -55,10 +56,11 @@ function App() {
 
           {/* admin protected routes */}
 
-          <Route element={<RequiredAuth allowedRoles="admin"/>}>
+          <Route element={<RequiredAuth allowedRoles="admin" />}>
             <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashBoard />} />
-            <Route path="viewlist" element={<ViewRecruiterList />} />
+              <Route index element={<AdminDashBoard />} />
+              <Route path="recruiter" element={<ViewRecruiter />} />
+              <Route path="user" element={<VeiwUsers />} />
             </Route>
           </Route>
         </Route>
