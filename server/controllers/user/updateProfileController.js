@@ -4,7 +4,6 @@ const User = require("../../models/User");
 const updateUserProfile = async (req, res) => {
   try {
     const { skills, experience } = req.body;
-    console.log(skills,experience);
 
     const userId = req.user.userInfo.id;
     const user = await User.findById(userId);
@@ -14,8 +13,14 @@ const updateUserProfile = async (req, res) => {
     if (skills && !Array.isArray(req.body.skills)) {
       return res.status(400).json({ message: "Skills must be an array" });
     }
-    if (skills) {
-      user.profile.skills = skills; // Overwrite with the new array, even if it's empty
+    const filteredSkills = [...new Set(req.body.skills
+      .map(skill => skill.trim().toLowerCase())
+      .filter(skill => skill !== ""))]; 
+    
+    if (req.body.skills.length === 0) {
+      user.profile.skills = [];
+    } else if (filteredSkills.length > 0) {
+      user.profile.skills = filteredSkills;
     }
     if (experience) {
       if (!Array.isArray(experience)) {
