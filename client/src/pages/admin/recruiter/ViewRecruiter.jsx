@@ -3,8 +3,11 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { debounce } from "lodash";
 import PaginationBar from "../../../components/pagination/PaginationBar";
 import OvalLoadingSpinner from "../../../components/spinners/OvalLoadingSpinner";
+import DateFilter from "../../../components/admin/DateFilter";
+import TableSearchBar from "../../../components/admin/TableSearchBar";
+import RecruiterVeiwtableList from "../../../components/admin/RecruiterVeiwtableList";
 
-function ViewRecruiterList() {
+function ViewRecruiter() {
   const [recruitersData, setRecruitersData] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -110,57 +113,14 @@ function ViewRecruiterList() {
 
           {/* Filters & Search */}
           <div className="relative flex flex-wrap sm:flex-row gap-4 justify-between items-center pb-4">
-            <div className="relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
-              >
-                {selectedFilter.label}
-                <svg
-                  className="w-2.5 h-2.5 ml-2"
-                  aria-hidden="true"
-                  fill="none"
-                  viewBox="0 0 10 6"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m1 1 4 4 4-4"
-                  />
-                </svg>
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute z-10 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
-                  <ul className="p-3 space-y-1 text-sm text-gray-700">
-                    {filters.map((filter) => (
-                      <li key={filter.value}>
-                        <button
-                          onClick={() => {
-                            setSelectedFilter(filter);
-                            setIsDropdownOpen(false);
-                          }}
-                          className="flex w-full items-center p-2 rounded-sm hover:bg-gray-100"
-                        >
-                          {filter.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="relative w-full sm:w-80">
-              <input
-                type="text"
-                placeholder="Search for items"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="block w-full p-2 pl-10 text-sm border rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
+            <DateFilter
+              filters={filters}
+              isDropdownOpen={isDropdownOpen}
+              selectedFilter={selectedFilter}
+              setIsDropdownOpen={setIsDropdownOpen}
+              setSelectedFilter={setSelectedFilter}
+            />
+            <TableSearchBar query={query} setQuery={setQuery} />
           </div>
 
           <div className="flex-1 overflow-hidden border rounded-lg">
@@ -218,55 +178,15 @@ function ViewRecruiterList() {
                     </tr>
                   ) : (
                     data?.map((i, index) => (
-                      <tr
+                      <RecruiterVeiwtableList
                         key={i._id}
-                        className="bg-white border-b hover:bg-gray-50"
-                      >
-                        <td className="px-6 py-4 font-medium text-gray-900">
-                          {index + 1 + (currentPage - 1) * limit}
-                        </td>
-                        <td className="px-6 py-4 font-medium text-gray-900">
-                          {i.name}
-                        </td>
-                        <td className="px-6 py-4">{i.email}</td>
-                        <td className="px-6 py-4">{i.company.name}</td>
-                        <td className="px-6 py-4 flex space-x-2">
-                          {i.status === "pending" ? (
-                            <button
-                              className="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600"
-                              onClick={() => handleApprove(i._id)}
-                            >
-                              Approve
-                            </button>
-                          ) : i.status === "approved" ? (
-                            <p className="text-green-600 font-semibold">
-                              Approved
-                            </p>
-                          ) : (
-                            <p className="text-red-600 font-semibold">
-                              Rejected
-                            </p>
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          {i.status !== "rejected" && (
-                            <button
-                              className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600"
-                              onClick={() => handleReject(i._id)}
-                            >
-                              Block
-                            </button>
-                          )}
-                          {i.status === "rejected" && (
-                            <button
-                              className="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600"
-                              onClick={() => handleApprove(i._id)}
-                            >
-                              Approve
-                            </button>
-                          )}
-                        </td>
-                      </tr>
+                        data={i}
+                        index={index}
+                        currentPage={currentPage}
+                        limit={limit}
+                        handleApprove={handleApprove}
+                        handleReject={handleReject}
+                      />
                     ))
                   )}
                 </tbody>
@@ -287,4 +207,4 @@ function ViewRecruiterList() {
   );
 }
 
-export default ViewRecruiterList;
+export default ViewRecruiter;
