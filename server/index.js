@@ -34,6 +34,7 @@ app.use("/application", require("./routes/recruiter/applicationRoutes"));
 //admin
 app.use("/adminAuth", require("./routes/admin/adminAuthRoutes"));
 app.use("/admin/recruiters", require("./routes/admin/adminRecruiter"));
+app.use("/admin/users", require("./routes/admin/adminUserRoutes"));
 
 app.use("*", (req, res) => {
   if (req.accepts("html")) {

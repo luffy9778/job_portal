@@ -53,19 +53,10 @@ const userSchema = new mongoose.Schema(
       ],
     },
     savedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }],
-    // applications: [
-    //   {
-    //     jobId: {
-    //       type: mongoose.Schema.Types.ObjectId,
-    //       ref: "Job",
-    //     },
-    //     status: {
-    //       type: String,
-    //       enum: ["applied", "shortlisted", "rejected", "hired"],
-    //       default: "applied",
-    //     },
-    //   },
-    // ],
+    isBlocked: {
+      type: Boolean,
+      default: false,
+      },
   },
   {
     timestamps: true,
