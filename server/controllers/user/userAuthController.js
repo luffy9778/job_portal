@@ -47,6 +47,9 @@ const login = async (req, res) => {
         .status(401)
         .json({ message: "Email or password is incorrect" });
     }
+    if (user.isBlocked) {
+      return res.status(403).json({ message: "Your account has been blocked" });
+      }
     const accessToken = jwt.sign(
       { userInfo: { id: user._id, role: user.role } },
       process.env.ACCESS_TOKEN_SECRET,

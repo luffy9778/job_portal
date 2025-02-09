@@ -1,5 +1,5 @@
 import React from "react";
-import Navbaruser from "../Navbaruser";
+import Navbaruser from "./Navbaruser";
 import { Outlet } from "react-router-dom";
 import { UserProvider } from "../../context/UserContext";
 import { UserJobSearchProvider } from "../../context/UserJobSearchContext";
