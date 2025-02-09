@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../../index.css";
 import { Link, useNavigate } from "react-router-dom";
-import Navbaruser from "../../components/Navbaruser";
 import Footer from "../../components/Footer";
 
 function Signup() {

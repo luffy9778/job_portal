@@ -1,8 +1,12 @@
 import React from "react";
 import navicon from "../../assets/icons8-swagbucks.svg";
 import { Link } from "react-router-dom";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useLogout from "../../hooks/useLogout";
 
 function RecruiterNavbar() {
+  const logOut = useLogout();
   return (
     <>
       <nav class="bg-white border-gray-200 dark:bg-gray-900 fixed w-full ">
@@ -58,21 +62,10 @@ function RecruiterNavbar() {
                   Add jobs
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/recruiterSignup"
-                  class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Signup
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/recruiterLogin"
-                  class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Login
-                </Link>
+              <li className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                <button onClick={logOut}>
+                  <FontAwesomeIcon icon={faArrowRightFromBracket} /> Logout
+                </button>
               </li>
             </ul>
           </div>

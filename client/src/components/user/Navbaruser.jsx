@@ -1,12 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import navicon from "../assets/icons8-swagbucks.svg";
-import profilePic from "../assets/avathar.svg";
+import navicon from "../../assets/icons8-swagbucks.svg"
+import profilePic from "../../assets/avathar.svg";
 import { Link, useParams } from "react-router-dom";
+import useLogout from "../../hooks/useLogout";
+import { faArrowRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Navbaruser() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const params = useParams();
+  const logOut = useLogout();
 
   // Dropdown references
   const profileDropdownRef = useRef(null);
@@ -117,24 +121,19 @@ function Navbaruser() {
                         to="/profile"
                         className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        Profile
+                         <FontAwesomeIcon icon={faUser} /> Profile
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/settings"
                         className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Settings
                       </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/logout"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
-                        Logout
-                      </Link>
+                    </li> */}
+                    <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <button onClick={logOut}><FontAwesomeIcon icon={faArrowRightFromBracket} /> Logout</button>
                     </li>
                   </ul>
                 </div>

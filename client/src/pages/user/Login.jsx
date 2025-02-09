@@ -13,7 +13,14 @@ function Login() {
   const userRef = useRef();
   const errRef = useRef();
 
-  const { setAuth } = useContext(AuthContext);
+  const {auth, setAuth } = useContext(AuthContext);
+
+useEffect(()=>{
+  if(auth?.accessToken){
+    navigate("/",{replace:true})
+  }
+},[auth,navigate])
+
 
   useEffect(() => {
     userRef.current.focus();
@@ -53,6 +60,8 @@ function Login() {
         setErrMsg("Missing Username or Password");
       } else if (err.response?.status === 401) {
         setErrMsg("Invalid username or password");
+      } else if (err.response?.status === 403) {
+        setErrMsg("Your account has been blocked");
       } else {
         setErrMsg("Login Failed");
       }
