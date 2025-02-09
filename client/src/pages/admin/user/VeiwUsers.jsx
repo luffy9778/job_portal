@@ -4,12 +4,13 @@ import { debounce } from "lodash";
 import PaginationBar from "../../../components/pagination/PaginationBar";
 import OvalLoadingSpinner from "../../../components/spinners/OvalLoadingSpinner";
 import DateFilter from "../../../components/admin/DateFilter";
-import RecruiterVeiwtableList from "../../../components/admin/RecruiterVeiwtableList";
 import TableSearchBar from "../../../components/admin/TableSearchBar";
+import UserViewTableList from "../../../components/admin/UserViewTableList";
+import StatusFilter from "../../../components/admin/StatusFilter";
 
 const VeiwUsers = () => {
-  const [recruitersData, setRecruitersData] = useState([]);
-  const [data, setData] = useState([]);
+  const [userData, setUserData] = useState([]);
+  console.log(userData);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,32 +28,33 @@ const VeiwUsers = () => {
   ];
   const [selectedFilter, setSelectedFilter] = useState(filters[1]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [isStatusDropDeownOpen, setIsStatusDropDeownOpen] = useState(false);
 
-  const fetchRecruiters = useCallback(async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axiosPrivate.get(
-        `/admin/recruiters/get?query=${query}&days=${selectedFilter.value}&limit=${limit}&page=${currentPage}`
+        `/admin/users/get?query=${query}&days=${selectedFilter.value}&limit=${limit}&page=${currentPage}&status=${selectedStatus}`
       );
-      setRecruitersData(response.data);
+      setUserData(response.data);
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
-  }, [query, selectedFilter, currentPage]);
+  }, [query, selectedFilter, currentPage, selectedStatus]);
 
   useEffect(() => {
-    fetchRecruiters();
-  }, [selectedFilter, currentPage]);
+    fetchUsers();
+  }, [selectedFilter, currentPage, selectedStatus]);
 
   const debouncedSearch = useCallback(
     debounce(() => {
-      fetchRecruiters();
+      fetchUsers();
     }, 400),
-    [fetchRecruiters]
+    [fetchUsers]
   );
 
   useEffect(() => {
@@ -60,46 +62,25 @@ const VeiwUsers = () => {
     return () => debouncedSearch.cancel(); // Cleanup previous calls
   }, [query]);
 
-  useEffect(() => {
-    console.log(selectedStatus);
-    if (selectedStatus === "all") {
-      setData(recruitersData.recruiter);
+  async function handleBlock(id, status) {
+    // setData((prevData) =>
+    //   prevData.map((recruiter) =>
+    //     recruiter._id === id ? { ...recruiter, status: "approved" } : recruiter
+    //   )
+    // );
+    let url;
+    if (status) {
+      url = `/admin/users/block/${id}`;
     } else {
-      setData(
-        recruitersData.recruiter.filter((i) => i.status === selectedStatus)
-      );
+      url = `/admin/users/unblock/${id}`;
     }
-  }, [selectedStatus, recruitersData]);
-
-  async function handleApprove(id) {
-    setData((prevData) =>
-      prevData.map((recruiter) =>
-        recruiter._id === id ? { ...recruiter, status: "approved" } : recruiter
-      )
-    );
     try {
-      const response = await axiosPrivate.patch(
-        `/admin/recruiters/approve/${id}`
-      );
+      console.log(url);
+      const response = await axiosPrivate.patch(url);
+      console.log(response.data);
+      fetchUsers();
     } catch (error) {
-      console.error("Error approving recruiter:", error);
-      fetchRecruiters();
-    }
-  }
-
-  async function handleReject(id) {
-    setData((prevData) =>
-      prevData.map((recruiter) =>
-        recruiter._id === id ? { ...recruiter, status: "rejected" } : recruiter
-      )
-    );
-    try {
-      const response = await axiosPrivate.patch(
-        `/admin/recruiters/reject/${id}`
-      );
-    } catch (error) {
-      fetchRecruiters();
-      console.error("Error approving recruiter:", error);
+      console.error("Error in userBlock handler", error);
     }
   }
 
@@ -107,9 +88,7 @@ const VeiwUsers = () => {
     <>
       <div className="min-h-screen flex justify-center bg-gray-100 p-6">
         <div className="w-full max-w-6xl bg-white p-8 rounded-2xl shadow-lg flex flex-col">
-          <h1 className="text-2xl font-bold text-blue-600 mb-6">
-            User List
-          </h1>
+          <h1 className="text-2xl font-bold text-blue-600 mb-6">User List</h1>
 
           {/* Filters & Search */}
           <div className="relative flex flex-wrap sm:flex-row gap-4 justify-between items-center pb-4">
@@ -120,6 +99,15 @@ const VeiwUsers = () => {
               setIsDropdownOpen={setIsDropdownOpen}
               setSelectedFilter={setSelectedFilter}
             />
+
+            <StatusFilter
+              filters={["All", "Blocked", "Not Blocked"]}
+              isStatusDropDeownOpen={isStatusDropDeownOpen}
+              selectedStatus={selectedStatus}
+              setIsStatusDropDeownOpen={setIsStatusDropDeownOpen}
+              setSelectedStatus={setSelectedStatus}
+            />
+
             <TableSearchBar query={query} setQuery={setQuery} />
           </div>
 
@@ -141,18 +129,6 @@ const VeiwUsers = () => {
                       Company
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      <select
-                        className="text-sm"
-                        value={selectedStatus}
-                        onChange={(e) => setSelectedStatus(e.target.value)}
-                      >
-                        <option value="all">All</option>
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                      </select>
-                    </th>
-                    <th scope="col" className="px-6 py-3">
                       Action
                     </th>
                   </tr>
@@ -167,7 +143,7 @@ const VeiwUsers = () => {
                         </div>
                       </td>
                     </tr>
-                  ) : data?.length === 0 ? (
+                  ) : userData.user?.length === 0 ? (
                     <tr className="h-40">
                       <td
                         colSpan="6"
@@ -177,15 +153,14 @@ const VeiwUsers = () => {
                       </td>
                     </tr>
                   ) : (
-                    data?.map((i, index) => (
-                      <RecruiterVeiwtableList
+                    userData.user?.map((i, index) => (
+                      <UserViewTableList
                         key={i._id}
                         data={i}
                         index={index}
                         currentPage={currentPage}
                         limit={limit}
-                        handleApprove={handleApprove}
-                        handleReject={handleReject}
+                        handleBlock={handleBlock}
                       />
                     ))
                   )}
