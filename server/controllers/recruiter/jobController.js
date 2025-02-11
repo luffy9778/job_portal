@@ -11,17 +11,21 @@ const postJob = async (req, res) => {
       skills,
       experience,
       location,
-      minSallary,
-      maxSallary,
+      minSalary,
+      maxSalary,
+      responsibilities
     } = req.body;
+  console.log(req.body.title)
+
     if (
       !title ||
       !description ||
       !skills ||
       !experience ||
       !location ||
-      !minSallary ||
-      !maxSallary
+      !minSalary ||
+      !maxSalary||
+      !responsibilities
     ) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
@@ -33,14 +37,15 @@ const postJob = async (req, res) => {
     const job = await Job.create({
       title: title,
       description: description,
+      responsibilities,
       requirements: {
         skills: skills,
         experience: experience,
       },
       location: location,
       salary: {
-        min: minSallary,
-        max: maxSallary,
+        min: minSalary,
+        max: maxSalary,
       },
       company:recruiter.company.name,
       recruiterId,
@@ -78,8 +83,8 @@ const updatePostedJob = async (req, res) => {
       skills,
       experience,
       location,
-      minSallary,
-      maxSallary,
+      minSalary,
+      maxSalary,
     } = req.body;
 
     // Update title
@@ -113,11 +118,11 @@ const updatePostedJob = async (req, res) => {
     }
 
     // update salary
-    if (minSallary && minSallary !== job.salary.min) {
-      job.salary.min = minSallary;
+    if (minSalary && minSalary !== job.salary.min) {
+      job.salary.min = minSalary;
     }
-    if (maxSallary && maxSallary !== job.salary.max) {
-      job.salary.max = maxSallary;
+    if (maxSalary && maxSalary !== job.salary.max) {
+      job.salary.max = maxSalary;
     }
 
     // Save the updated job

@@ -104,7 +104,8 @@ const getAllRecruiter = async (req, res) => {
     const recruiter = await Recruiter.find({ ...filter, ...dateFilter })
       .sort({ createdAt: -1 })
       .skip((currentPage - 1) * perPage)
-      .limit(perPage);
+      .limit(perPage)
+      .select("name email company.name status")
 
     const totalRecruiter = await Recruiter.countDocuments({ ...filter, ...dateFilter });
 

@@ -3,8 +3,8 @@ import logo from "../../assets/linked.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons"; 
-import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faBuilding, faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons"; 
+import {  faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
 import UserContext from "../../context/UserContext";
 const jobCard = ({ job }) => {
   const timeAgo = formatDistanceToNow(job?.createdAt, { addSuffix: true });
@@ -14,9 +14,10 @@ const jobCard = ({ job }) => {
     <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-6">
         <div className="flex justify-between">
       <div className="flex items-center mb-4 ">
-        <img src={logo} class="h-8" alt="company logo" />
+        {/* <img src={logo} class="h-8" alt="company logo" /> */}
+        <FontAwesomeIcon icon={faBuilding} className="text-3xl text-gray-500"/>
         <div className="pl-2">
-          <h3 className="text-lg font-medium">{job?.recruiterId.name}</h3>
+          <h3 className="text-lg font-medium capitalize">{job?.recruiterId.name}</h3>
           <p className="text-sm text-gray-500">{job?.location}</p>
         </div>
         </div>
@@ -24,7 +25,7 @@ const jobCard = ({ job }) => {
         <FontAwesomeIcon icon={solidBookmark} className="text-3xl  hover:scale-105"  onClick={()=>removeSavedJobs(job._id)}/>:
         <FontAwesomeIcon icon={regularBookmark} className="text-3xl  hover:scale-105" onClick={()=>saveJob(job._id)}/>}
       </div>
-      <h4 className="text-lg font-semibold">{job?.title}</h4>
+      <h4 className="text-lg font-semibold capitalize">{job?.title}</h4>
       <p className="text-sm text-gray-500 my-2">{timeAgo}</p>
       <p className="text-sm text-gray-700 mb-4">
         {job?.description.length > 60
