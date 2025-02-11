@@ -22,6 +22,7 @@ import AdminDashBoard from "./pages/admin/AdminDashBoard";
 import MyJobs from "./pages/user/MyJobs";
 import ViewRecruiter from "./pages/admin/recruiter/ViewRecruiter";
 import VeiwUsers from "./pages/admin/user/VeiwUsers";
+import AddJob from "./pages/recruiter/AddJob";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
               <Route index element={<RecruiterHome />} />
               <Route path="jobview" element={<RecruiterViewJobs />} />
               <Route path="viewapplication/:id" element={<ApplicationView />} />
+              <Route path="addJob" element={<AddJob/>}/>
             </Route>
           </Route>
 

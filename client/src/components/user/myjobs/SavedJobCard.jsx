@@ -1,4 +1,4 @@
-import { faBan } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faBuilding } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formatDistanceToNow } from "date-fns";
 import React from "react";
@@ -10,15 +10,16 @@ const SavedJobCard = ({ job, status, date }) => {
   return (
     <div className="my-2 flex justify-between px-1 md:px-14 text-sm md:text-base hover:bg-gray-200 rounded-lg">
       <div className="flex items-center">
-        <div className="w-10 h-10 mr-2 md:w-14 md:h-14 md:mr-8 ">
-          <img
+        <div className="w-10 h-10 mr-2 md:w-14 md:h-14 md:mr-8 flex justify-center items-center">
+          {/* <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0-jqMXOqsUz-I1x7QrD6LX1WnxIUSS-kR7rQ92OFxcZNJ02VuGgmWjYQ&s"
             alt="Job Image"
             className="h-full w-full rounded-md"
-          />
+          /> */}
+          <FontAwesomeIcon icon={faBuilding} className="text-3xl" />
         </div>
         <div className="py-2">
-          <h2 className=" md:text-lg font-semibold hover:underline">
+          <h2 className=" md:text-lg font-semibold hover:underline capitalize">
             <Link to={`/jobDetails/${job?._id}`}>{job?.title}</Link>
           </h2>
           <p>{job?.company}</p>
