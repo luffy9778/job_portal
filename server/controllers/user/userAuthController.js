@@ -1,7 +1,9 @@
 const User = require("../../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-// const verifyJwt = require("../../middlewares/verifyJwt");
+const { OAuth2Client } = require("google-auth-library");
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const signUp = async (req, res) => {
   const { firstName, lastName, email, phone, password } = req.body;
@@ -41,6 +43,9 @@ const login = async (req, res) => {
         .status(401)
         .json({ message: "Email or password is incorrect" });
     }
+    // if (!user.password) {
+    //   return res.status(400).json({ message: "This account uses Google sign-in. Please use that method or set a password." });
+    // }
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res
@@ -49,7 +54,7 @@ const login = async (req, res) => {
     }
     if (user.isBlocked) {
       return res.status(403).json({ message: "Your account has been blocked" });
-      }
+    }
     const accessToken = jwt.sign(
       { userInfo: { id: user._id, role: user.role } },
       process.env.ACCESS_TOKEN_SECRET,
@@ -58,7 +63,7 @@ const login = async (req, res) => {
       }
     );
     const refreshToken = jwt.sign(
-      { id: user._id,role:user.role },
+      { id: user._id, role: user.role },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "1h" }
     );
@@ -80,46 +85,82 @@ const login = async (req, res) => {
   }
 };
 
-// const logOut = async (req, res) => {
-//   const cookies = req.cookies;
-//   if (!cookies?.jwt) {
-//     return res.sendStatus(204);
-//   }
-//   res.clearCookie("jwt", {
-//     httpOnly: true,
-//     secure: false,
-//     sameSite: "lax",
-//   });
-//   res.json({ message: "cookie cleared and logOut" });
-// };
+const googleSignIn = async (req, res) => {
+  const { tokenId } = req.body;
+  if (!tokenId) {
+    return res
+      .status(400)
+      .json({ message: "No token provided for goole signin" });
+  }
 
-// const refresh = async (req, res) => {
-//   const cookies = req.cookies;
-//   if (!cookies || !cookies.jwt) {
-//     return res
-//       .status(401)
-//       .json({ message: "Please login first , unauthorized" });
-//   }
-//   const refreshToken = cookies.jwt;
-//   jwt.verify(
-//     refreshToken,
-//     process.env.REFRESH_TOKEN_SECRET,
-//     async (err, user) => {
-//       if (err) {
-//         return res.status(403).json({ message: "Invalid token" });
-//       }
-//       const foundUser = await User.findById(user.userId);
-//       if (!foundUser) {
-//         return res.status(404).json({ message: "User not found" });
-//       }
-//       const accessToken = jwt.sign(
-//         { userInfo: { userId: foundUser._id, role: foundUser.role } },
-//         process.env.ACCESS_TOKEN_SECRET,
-//         { expiresIn: "1h" }
-//       );
-//       res.json({ accessToken, role: foundUser.role });
-//     }
-//   );
-// };
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const {
+      email_verified,
+      email,
+      given_name,
+      family_name,
+      sub: googleId,
+    } = payload;
+    if (!email_verified) {
+      return res
+        .status(400)
+        .json({ message: "Google account email not verified." });
+    }
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        email,
+        firstName: given_name,
+        lastName: family_name,
+        email,
+        googleId,
+        password:"",
+        // isVerified: true,
+        });
+        await user.save();
+      }else {
+        if (user.isBlocked) {
+          return res.status(403).json({ message: "Your account has been blocked" });
+        }
+        if (!user.googleId) {
+          user.googleId = googleId;
+          await user.save();
+        }
+      }
 
-module.exports = { signUp, login };
+      const accessToken = jwt.sign(
+        { userInfo: { id: user._id, role: user.role } },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1h" }
+      );
+  
+      const refreshToken = jwt.sign(
+        { id: user._id, role: user.role },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: "1h" }
+      );
+
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        secure: false, // change to true in production when using HTTPS
+        sameSite: "lax",
+        maxAge: 60 * 60 * 1000, // 1 hour
+      });
+
+      res.status(200).json({
+        message: `${user.firstName} logged in successfully via Google`,
+        accessToken,
+        role: user.role,
+      });
+  } catch (error) {
+    console.error("Google Sign-In Error: ", error);
+    res.status(500).json({ message: "Error during Google sign in" });
+  }
+};
+
+module.exports = { signUp, login ,googleSignIn};
