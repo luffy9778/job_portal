@@ -14,8 +14,7 @@ const UpdateProfileForm = ({ setUpdate, userData }) => {
 
   const [skills, setSkills] = useState(userData?.profile?.skills || []);
   const [skillErrors, setSkillErrors] = useState([]);
-console.log("skill=",skills)
-console.log("skillerror=",skillErrors)
+
   const [experience, setExperience] = useState(
     userData?.profile?.experience || [{ companyName: "", years: "" }]
   );
