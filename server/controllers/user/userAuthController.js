@@ -7,6 +7,7 @@ const OTP = require("../../models/Otp");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const signUp = async (req, res) => {
+  console.log(req.body)
   const { firstName, lastName, email, phone, password, otp } = req.body;
   if (!firstName || !lastName || !email || !phone || !password || !otp) {
     return res.status(400).json({ message: "Please fill in all fields." });
@@ -18,8 +19,8 @@ const signUp = async (req, res) => {
     }
 
     const checkOtp = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
-    if (checkOtp.length === 0 && checkOtp[0].otp !== otp) {
-      return res.status(400).json({ message: "Invalid OTP" });
+    if (checkOtp.length === 0 || checkOtp[0].otp !== otp) {
+      return res.status(422).json({ message: "Invalid OTP" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
