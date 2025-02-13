@@ -7,6 +7,7 @@ import BgBlurSpinner from "../../components/spinners/BgBlurSpinner";
 
 function JobApplicationForm({ jobId }) {
   const { userData } = useContext(UserContext);
+  console.log(userData)
   const [steps, setSteps] = useState(1);
   const [resume, setResume] = useState(null);
   const fileRef = useRef(null);
@@ -17,19 +18,7 @@ function JobApplicationForm({ jobId }) {
   const axiosPrivate = useAxiosPrivate();
   const params = useParams();
   const navigate=useNavigate()
-  // const [formData, setFormData] = useState({
-  //   name: "",
-  //   email: "",
-  //   phoneNo: "",
-  //   resume: "",
-  //   skills: "",
-  //   experience: "",
-  // });
-
-  // const handleChange = (e) => {
-  //   setFormData({ ...formData, [e.target.name]: e.target.value });
-  // };
-
+ 
   const handleCheck = (e) => {
     setIsChecked(e.target.checked);
     fileRef.current.value = "";
@@ -130,6 +119,7 @@ function JobApplicationForm({ jobId }) {
         {/* Step 2 - Experience & Skills */}
         {steps === 2 && (
           <div className="space-y-4">
+            {userData?.profile?.resume_Url&&
             <div className="border border-gray-200 p-4 rounded-lg">
               <div className="flex justify-between  pr-8 border border-gray-300 rounded-lg">
                 <div className="flex">
@@ -154,22 +144,8 @@ function JobApplicationForm({ jobId }) {
                   className="w-5"
                 />
               </div>
-            </div>
-            {/* <h3 className="text-lg font-semibold text-gray-700">Experience & Skills</h3>
-          <textarea
-            name="experience"
-            placeholder="Work Experience"
-            value={formData.experience}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-500"
-          ></textarea>
-          <textarea
-            name="skills"
-            placeholder="Skills"
-            value={formData.skills}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-500"
-          ></textarea> */}
+            </div> }
+  
             <div>
               <label className="block text-gray-700 font-medium mb-2">
                 Upload Resume
@@ -191,8 +167,13 @@ function JobApplicationForm({ jobId }) {
                 Back
               </button>
               <button
-                className="bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
+                className={`px-5 py-2 rounded-lg transition ${
+                  (userData?.profile?.resume_Url && isChecked) || fileRef?.current?.files?.length
+                    ? "bg-orange-500 text-white hover:bg-orange-600"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
                 onClick={nextSteps}
+                disabled={(!userData?.profile?.resume_Url&&!fileRef?.current?.files?.length)||(userData?.profile?.resume_Url&&!isChecked&&!fileRef?.current?.files?.length)}
               >
                 Next
               </button>

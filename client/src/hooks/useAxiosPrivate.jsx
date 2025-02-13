@@ -30,6 +30,7 @@ const useAxiosPrivate = () => {
         if (error?.response?.status === 403 && !originalRequest._retry) {
           originalRequest._retry = true;
           const accessToken = await refresh();
+          if (!accessToken) return Promise.reject(error);
           originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
           return axiosPrivate(originalRequest);
         }

@@ -7,7 +7,6 @@ const OTP = require("../../models/Otp");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const signUp = async (req, res) => {
-  console.log(req.body)
   const { firstName, lastName, email, phone, password, otp } = req.body;
   if (!firstName || !lastName || !email || !phone || !password || !otp) {
     return res.status(400).json({ message: "Please fill in all fields." });
@@ -52,13 +51,11 @@ const signUp = async (req, res) => {
       sameSite: "lax", // Use lax for local dev
       maxAge: 60 * 60 * 1000,
     });
-    res
-      .status(201)
-      .json({
-        message: "User created successfully",
-        accessToken,
-        role: user.role,
-      });
+    res.status(201).json({
+      message: "User created successfully",
+      accessToken,
+      role: user.role,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error creating user" });
@@ -199,4 +196,43 @@ const googleSignIn = async (req, res) => {
   }
 };
 
-module.exports = { signUp, login, googleSignIn };
+const checkResetToken=async(req,res)=>{
+  try {
+    const resetToken = req.cookies?.resetToken;
+    if (!resetToken) return res.status(401).json({ message: "Unauthorized or token expired" });
+
+    // Verify token
+    const decoded = jwt.verify(resetToken, process.env.RESET_TOKEN_SECRET);
+    if (!decoded.email) return res.status(401).json({ message: "Invalid token" });
+    const user = await User.findOne({ email: decoded.email });
+    if (!user) return res.status(401).json({ message: "Invalid token" });
+
+    res.status(200).json({ message: "Token valid" });
+  } catch (error) {
+    console.log(error)
+    res.status(401).json({ message: "Invalid or expired token" });
+  }
+}
+
+const resetPassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    if (!newPassword)
+      return res.status(400).json({ message: "New password is required" });
+    const resetToken = req.cookies?.resetToken;
+    if (!resetToken)
+      return res.status(401).json({ message: "Unauthorized or token expired" });
+
+    const decoded = jwt.verify(resetToken, process.env.RESET_TOKEN_SECRET);
+    const user = await User.findOne({ email: decoded.email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error during password reset: ", error);
+    res.status(500).json({ message: "Error during password reset" });
+  }
+};
+module.exports = { signUp, login, googleSignIn,resetPassword,checkResetToken };
