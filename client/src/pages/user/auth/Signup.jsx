@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
-import "../../index.css";
+import "../../../index.css";
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../../components/Footer";
+import Footer from "../../../components/Footer";
 import axios from "axios";
-import AuthContext from "../../context/AuthContext";
+import AuthContext from "../../../context/AuthContext";
+import OtpVerification from "./OtpVerification";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -14,11 +15,11 @@ function Signup() {
     password: "",
     confirmPassword: "",
   });
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [otpSent, setOtpSent] = useState(false);
   const { setAuth } = useContext(AuthContext);
 
-  const navigate = useNavigate(); // No arguments needed
+  const navigate = useNavigate();
   const [errMsg, setErrMsg] = useState("");
 
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -31,24 +32,30 @@ function Signup() {
     setTermsAccepted(e.target.checked);
   };
 
-  const handleSendOtp = async (e) => {
-    e.preventDefault();
+  //OTP handler
+
+  const handleSendOtp = async () => {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      setErrMsg("Please fill in all fields.");
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setErrMsg("Passwords do not match.");
+      return;
+    }
     if (!termsAccepted) {
       setErrMsg("Please accept the terms and conditions.");
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setErrMsg("Passwords do not match.");
-      return;
-    }
-
-    if (!formData.email) {
-      setErrMsg("Please enter your email");
-      return;
-    }
     try {
-      setOtpSent(true)
       const response = await axios.post(
         "http://localhost:3500/userAuth/send-otp",
         { email: formData.email }
@@ -61,14 +68,20 @@ function Signup() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  //SignUp handler
+
+  const handleSubmit = async (otp) => {
     try {
       const response = await axios.post(
         "http://localhost:3500/userAuth/signUp",
-        { ...formData, otp }
+        { ...formData, otp },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
       );
-      alert("success");
       setFormData({
         firstName: "",
         lastName: "",
@@ -77,15 +90,18 @@ function Signup() {
         password: "",
         confirmPassword: "",
       });
-      setOtp("")
+      setOtp("");
       setAuth({
         accessToken: response.data.accessToken,
         role: response.data.role,
       });
-      setOtpSent(false)
-      navigate("/",{ replace: true });
+      // setOtpSent(false);
+      navigate("/", { replace: true });
     } catch (error) {
-      console.error("Error:", error);
+      console.log(error)
+      if(error.response?.status === 422){
+        setErrMsg("Invalid OTP");
+      }else
       setErrMsg("An error occurred. Please try again later.");
     }
   };
@@ -185,11 +201,17 @@ function Signup() {
                     </label>
                     <input
                       name="phone"
-                      type="number"
+                      type="tel"
                       className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-2.5 rounded-md border focus:bg-transparent focus:border-black outline-none transition-all"
                       placeholder="Enter mobile number"
                       value={formData.phone}
-                      onChange={handleInputChange}
+                      maxLength="15"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^[0-9+\-()]*$/.test(value)) {
+                          setFormData({ ...formData, phone: value }); // Allow only numbers and special characters
+                        }
+                      }}
                       required
                     />
                   </div>
@@ -246,7 +268,11 @@ function Signup() {
                     type="button"
                     onClick={handleSendOtp}
                     disabled={otpSent}
-                    className="py-3 px-6 text-sm tracking-wide rounded-md text-white bg-gray-800 hover:bg-gray-900 focus:outline-none transition-all"
+                    className={`py-3 px-6 text-sm tracking-wide rounded-md text-white ${
+                      otpSent
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-gray-800 hover:bg-gray-900"
+                    } focus:outline-none transition-all`}
                   >
                     Sign up
                   </button>
@@ -263,27 +289,17 @@ function Signup() {
           <Footer />
         </>
       )}
+      
       {otpSent && (
-        <div className="h-screen w-full flex justify-center items-center">
-          <div className="w-2/3 h-2/5 md:h-1/2 rounded-lg bg-gray-100 border border-gray-400 max-w-[500px] flex flex-col px-4 md:px-20 justify-center">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
-              Enter Otp
-            </h2>
-            <input
-              type="text"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              className="border p-2 mb-4 rounded-lg border-gray-400"
-            />
-            <button
-              className="bg-orange-500 text-white p-2 rounded-lg"
-              onClick={handleSubmit}
-            >
-              Verify OTP
-            </button>
-          </div>
-        </div>
+        <OtpVerification
+          otp={otp}
+          setOtp={setOtp}
+          otpSent={otpSent}
+          errMsg={errMsg}
+          setErrMsg={setErrMsg}
+          handleSubmit={handleSubmit}
+          handleSendOtp={handleSendOtp}
+        />
       )}
     </>
   );

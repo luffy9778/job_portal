@@ -1,8 +1,8 @@
 import "./index.css";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/user/Home";
-import Login from "./pages/user/Login";
-import Signup from "./pages/user/Signup";
+import Login from "./pages/user/auth/Login";
+import Signup from "./pages/user/auth/Signup";
 import RecuriterLogin from "./pages/recruiter/RecuriterLogin";
 import RecruiterSignup from "./pages/recruiter/RecruiterSignup";
 import RecruiterHome from "./pages/recruiter/RecruiterHome";

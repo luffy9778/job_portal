@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../../components/Footer";
-import AuthContext from "../../context/AuthContext";
+import Footer from "../../../components/Footer";
+import AuthContext from "../../../context/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
 
 function Login() {
