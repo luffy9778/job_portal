@@ -25,6 +25,7 @@ function Signup() {
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const handleInputChange = (e) => {
+    setErrMsg("")
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -63,7 +64,11 @@ function Signup() {
       setOtpSent(true);
       setErrMsg("");
     } catch (error) {
-      setErrMsg("Failed to send OTP");
+      if (error.response?.status === 400) {
+        setErrMsg("email already in use");
+      } else {
+        setErrMsg("Failed to send OTP");
+      }
       console.log(error);
     }
   };
@@ -98,11 +103,10 @@ function Signup() {
       // setOtpSent(false);
       navigate("/", { replace: true });
     } catch (error) {
-      console.log(error)
-      if(error.response?.status === 422){
+      console.log(error);
+      if (error.response?.status === 422) {
         setErrMsg("Invalid OTP");
-      }else
-      setErrMsg("An error occurred. Please try again later.");
+      } else setErrMsg("An error occurred. Please try again later.");
     }
   };
 
@@ -289,7 +293,7 @@ function Signup() {
           <Footer />
         </>
       )}
-      
+
       {otpSent && (
         <OtpVerification
           otp={otp}

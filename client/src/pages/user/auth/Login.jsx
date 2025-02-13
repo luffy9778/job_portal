@@ -168,7 +168,7 @@ useEffect(()=>{
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <Link
-                  to="#"
+                  to="/forgotpassword"
                   className="text-xs text-gray-500 hover:text-gray-900 text-end w-full mt-2"
                 >
                   Forget Password?
