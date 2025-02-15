@@ -15,7 +15,6 @@ const postJob = async (req, res) => {
       maxSalary,
       responsibilities
     } = req.body;
-  console.log(req.body.title)
 
     if (
       !title ||

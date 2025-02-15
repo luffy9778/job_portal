@@ -1,8 +1,8 @@
 import "./index.css";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/user/Home";
-import Login from "./pages/user/Login";
-import Signup from "./pages/user/Signup";
+import Login from "./pages/user/auth/Login";
+import Signup from "./pages/user/auth/Signup";
 import RecuriterLogin from "./pages/recruiter/RecuriterLogin";
 import RecruiterSignup from "./pages/recruiter/RecruiterSignup";
 import RecruiterHome from "./pages/recruiter/RecruiterHome";
@@ -23,6 +23,8 @@ import MyJobs from "./pages/user/MyJobs";
 import ViewRecruiter from "./pages/admin/recruiter/ViewRecruiter";
 import VeiwUsers from "./pages/admin/user/VeiwUsers";
 import AddJob from "./pages/recruiter/AddJob";
+import ForgotPassword from "./pages/user/auth/ForgotPassword";
+import ResetPassword from "./pages/user/auth/ResetPassword";
 
 function App() {
   return (
@@ -69,6 +71,8 @@ function App() {
 
         <Route path="/signUp" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgotpassword" element={<ForgotPassword/>} />
+        <Route path="/reset-password" element={<ResetPassword/>} />
 
         <Route path="/recruiterLogin" element={<RecuriterLogin />} />
         <Route path="/recruiterSignup" element={<RecruiterSignup />} />

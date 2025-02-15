@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../../components/Footer";
-import AuthContext from "../../context/AuthContext";
+import Footer from "../../../components/Footer";
+import AuthContext from "../../../context/AuthContext";
+import { GoogleLogin } from "@react-oauth/google";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -68,6 +69,38 @@ useEffect(()=>{
       errRef?.current?.focus();
     }
   };
+
+
+  const handleGoogleSuccess=async(credentialResponse)=>{
+    try {
+      const response=await axios.post(
+        "http://localhost:3500/userAuth/google-signin",
+        {tokenId:credentialResponse.credential},
+        {
+          headers:{
+            "Content-Type":"application/json"
+          },
+          withCredentials:true
+        }
+
+      )
+      if (response.status === 200) {
+        setAuth({
+          accessToken: response.data.accessToken,
+          role: response.data.role,
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Google sign in error", error);
+      setErrMsg("Google sign in failed. Please try again.");
+    }
+  }
+
+  const handleGoogleFailure =(error)=>{
+    console.error("Google sign in failed", error);
+    setErrMsg("Google sign in failed. Please try again.");
+  }
 
   return (
     <>
@@ -135,7 +168,7 @@ useEffect(()=>{
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <Link
-                  to="#"
+                  to="/forgotpassword"
                   className="text-xs text-gray-500 hover:text-gray-900 text-end w-full mt-2"
                 >
                   Forget Password?
@@ -158,6 +191,12 @@ useEffect(()=>{
                 Don&apos;t have any account yet?{" "}
                 <span className="text-orange-400"> Sign Up</span>
               </Link>
+            </div>
+            <div className="mt-4 flex items-center justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleFailure}
+              />
             </div>
           </div>
         </div>

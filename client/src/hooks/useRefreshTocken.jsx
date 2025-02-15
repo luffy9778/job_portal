@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
+import useLogout from "./useLogout";
 
 const useRefreshTocken = () => {
   const { setAuth } = useContext(AuthContext);
+  const logOut=useLogout()
   const refresh = async () => {
-    console.log("refresh");
     try {
       const response = await axios.post(
         "http://localhost:3500/auth/refresh",
@@ -24,6 +25,8 @@ const useRefreshTocken = () => {
       return response.data.accessToken;
     } catch (error) {
       console.log(error);
+      await logOut();
+      return null;
     }
   };
   return refresh;

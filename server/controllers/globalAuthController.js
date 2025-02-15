@@ -22,8 +22,14 @@ const refresh = async (req, res) => {
       let foundUser;
       if (role === "user") {
         foundUser = await User.findById(id);
+        if(foundUser.isBlocked){
+          return res.status(403).json({ message: "Your account is blocked" });
+        }
       } else if (role === "recruiter") {
         foundUser = await Recruiter.findById(id);
+        if(foundUser.status==="rejected"){
+          return res.status(403).json({ message: "Your account is rejected" });
+        }
       } else if (role === "admin") {
         foundUser = await Admin.findById(id);
       }

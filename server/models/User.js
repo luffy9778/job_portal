@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
-      required: true,
+      // required: true,
     },
     email: {
       type: String,
@@ -16,12 +16,20 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
     phone: {
-      type: Number,
-      required: true,
+      type: String,
+      required: function () {
+        return !this.googleId;
+      },
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.googleId;
+      },
+    },
+    googleId: {
+      type: String,
+      default: null,
     },
     role: {
       type: String,
@@ -56,7 +64,7 @@ const userSchema = new mongoose.Schema(
     isBlocked: {
       type: Boolean,
       default: false,
-      },
+    },
   },
   {
     timestamps: true,
