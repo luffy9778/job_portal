@@ -203,7 +203,7 @@ const AddJob = () => {
             <button
               type="button"
               onClick={handleAddSkill}
-              className="bg-blue-600 text-white px-3 py-2 rounded-md"
+              className="bg-orange-600 text-white px-3 py-2 rounded-md"
             >
               Add
             </button>
@@ -257,7 +257,7 @@ const AddJob = () => {
         <div className="md:col-span-2 text-center">
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md"
+            className="w-full bg-orange-600 text-white py-2 px-4 rounded-md"
           >
             Post Job
           </button>

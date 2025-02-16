@@ -1,78 +1,57 @@
-import React from "react";
-import navicon from "../../assets/icons8-swagbucks.svg";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightFromBracket, faBars, faTimes, faBriefcase, faPlus } from "@fortawesome/free-solid-svg-icons";
+import navicon from "../../assets/icons8-swagbucks.svg";
 import useLogout from "../../hooks/useLogout";
 
-function RecruiterNavbar() {
+function RecruiterSidebar() {
+  const [isOpen, setIsOpen] = useState(false);
   const logOut = useLogout();
+
   return (
-    <>
-      <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed w-full ">
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <Link
-            to="/recruiter"
-            className="flex items-center space-x-3 rtl:space-x-reverse"
-          >
-            <img src={navicon} className="h-8" alt="Flowbite Logo" />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-              MyJobGator
-            </span>
+    <div className="flex">
+      {/* Sidebar */}
+      <div className={`bg-gray-900 text-white h-screen w-64 p-5 fixed transition-transform ${isOpen ? "translate-x-0" : "-translate-x-64"} md:translate-x-0`}> 
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/recruiter" className="flex items-center space-x-3">
+            <img src={navicon} className="h-8" alt="Logo" />
+            <span className="text-2xl font-semibold">MyJobGator</span>
           </Link>
-          <button
-            data-collapse-toggle="navbar-default"
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-            aria-controls="navbar-default"
-            aria-expanded="false"
-          >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
+          <button className="md:hidden" onClick={() => setIsOpen(false)}>
+            <FontAwesomeIcon icon={faTimes} className="text-xl" />
           </button>
-          <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              <li>
-                <Link
-                  to="jobview"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  View jobs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/recruiter/addJob"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Add jobs
-                </Link>
-              </li>
-              <li classNameName="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-500 md:p-0 dark:text-white md:dark:hover:text-orange-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                <button onClick={logOut}>
-                  <FontAwesomeIcon icon={faArrowRightFromBracket} /> Logout
-                </button>
-              </li>
-            </ul>
-          </div>
         </div>
-      </nav>
-    </>
+        <nav>
+          <ul className="space-y-4">
+            <li>
+              <Link to="jobview" className="flex items-center space-x-3 p-2 hover:bg-gray-700 rounded">
+                <FontAwesomeIcon icon={faBriefcase} />
+                <span>View Jobs</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/recruiter/addJob" className="flex items-center space-x-3 p-2 hover:bg-gray-700 rounded">
+                <FontAwesomeIcon icon={faPlus} />
+                <span>Add Jobs</span>
+              </Link>
+            </li>
+            <li>
+              <button onClick={logOut} className="flex items-center space-x-3 p-2 hover:bg-gray-700 rounded w-full text-left">
+                <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                <span>Logout</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      {/* Menu button for mobile */}
+      <button className="md:hidden p-4 fixed" onClick={() => setIsOpen(true)}>
+        <FontAwesomeIcon icon={faBars} className="text-2xl" />
+      </button>
+    </div>
   );
 }
 
-export default RecruiterNavbar;
+export default RecruiterSidebar;
