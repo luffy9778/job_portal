@@ -66,7 +66,7 @@ const recruiterLogin = async (req, res) => {
 
     if (recruiter.status === "pending") {
       return res.status(401).json({
-        message: "Your account is still pending approval by the admin",
+        message: "Your account is currently under review. An admin will approve it soon. Please check back later.",
       });
     }
 

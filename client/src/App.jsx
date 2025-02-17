@@ -25,6 +25,7 @@ import VeiwUsers from "./pages/admin/user/VeiwUsers";
 import AddJob from "./pages/recruiter/AddJob";
 import ForgotPassword from "./pages/user/auth/ForgotPassword";
 import ResetPassword from "./pages/user/auth/ResetPassword";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -54,7 +55,7 @@ function App() {
               <Route index element={<RecruiterHome />} />
               <Route path="jobview" element={<RecruiterViewJobs />} />
               <Route path="viewapplication/:id" element={<ApplicationView />} />
-              <Route path="addJob" element={<AddJob/>}/>
+              <Route path="addJob" element={<AddJob />} />
             </Route>
           </Route>
 
@@ -71,13 +72,15 @@ function App() {
 
         <Route path="/signUp" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/forgotpassword" element={<ForgotPassword/>} />
-        <Route path="/reset-password" element={<ResetPassword/>} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route path="/recruiterLogin" element={<RecuriterLogin />} />
         <Route path="/recruiterSignup" element={<RecruiterSignup />} />
 
         <Route path="/adminLogin" element={<AdminLogin />} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

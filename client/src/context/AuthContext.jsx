@@ -4,11 +4,11 @@ const AuthContext = createContext({});
 
 export const  AuthProvider = ({ children }) => {
  const [auth,setAuth]=useState({})
- console.log(auth)
+ const [loggingOut, setLoggingOut] = useState(false)
 return(
     <AuthContext.Provider
     value={{
-        auth,setAuth
+        auth,setAuth,loggingOut, setLoggingOut 
     }}>
         {children}
     </AuthContext.Provider>

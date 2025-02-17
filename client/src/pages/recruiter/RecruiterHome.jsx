@@ -30,10 +30,10 @@ export default function RecruiterHome() {
     <>
       <div className="flex min-h-screen">
         {/* Sidebar */}
-        <div className="w-1/5 bg-gray-900 text-white p-5 flex flex-col space-y-4"></div>
+        {/* <div className="w-1/5 bg-gray-200 text-white p-5 flex flex-col space-y-4"></div> */}
 
         {/* Main Content */}
-        <div className="w-4/5 p-10 flex flex-col items-center">
+        <div className=" p-10 flex flex-col items-center">
           <h1 className="text-3xl font-bold text-center mb-6">Our Users Say!!!</h1>
           <div className="flex justify-center gap-4">
             {testimonials.map((testimonial, index) => (
@@ -80,7 +80,7 @@ export default function RecruiterHome() {
             <p className="mt-4 text-gray-600">
               Mollit anim laborum. Duis aute irufg dhjkolorh in re voluptate velit esscillumlore eu quife nrulla pariatur. Excghecepteur signjnt occa cupidatat non inulpadeserunt mollit aboru. temnthp incididbnt ut labore mollit anim laborum suis aute.
             </p>
-            <Link to="/addJob">
+            <Link to="addJob">
             <button className="mt-6 bg-orange-500 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-orange-600 transition">
             Post A Job
           </button>
