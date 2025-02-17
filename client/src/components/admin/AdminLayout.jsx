@@ -5,9 +5,11 @@ import AdminNavbar from "./AdminNavbar";
 const AdminLayout = () => {
   return (
     <>
-    <div>
-      <AdminNavbar/>
-      <Outlet />
+      <div>
+        <AdminNavbar />
+        <div className="md:ml-64">
+          <Outlet />
+        </div>
       </div>
     </>
   );

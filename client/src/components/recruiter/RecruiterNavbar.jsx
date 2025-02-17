@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRightFromBracket, faBars, faTimes, faBriefcase, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightFromBracket, faBars, faTimes, faBriefcase, faPlus, faHome } from "@fortawesome/free-solid-svg-icons";
 import navicon from "../../assets/icons8-swagbucks.svg";
 import useLogout from "../../hooks/useLogout";
 
@@ -24,6 +24,12 @@ function RecruiterSidebar() {
         </div>
         <nav>
           <ul className="space-y-4">
+            <li>
+              <Link to="/" className="flex items-center space-x-3 p-2 hover:bg-gray-700 rounded">
+                <FontAwesomeIcon icon={faHome} />
+                <span>Home</span>
+              </Link>
+            </li>
             <li>
               <Link to="jobview" className="flex items-center space-x-3 p-2 hover:bg-gray-700 rounded">
                 <FontAwesomeIcon icon={faBriefcase} />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import navicon from "../../assets/icons8-swagbucks.svg"
 import profilePic from "../../assets/avathar.svg";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import useLogout from "../../hooks/useLogout";
 import { faArrowRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +11,8 @@ function Navbaruser() {
   const [showButton, setShowButton] = useState(false);
   const params = useParams();
   const logOut = useLogout();
+const loaction =useLocation()
+const isActive=(path)=>loaction.pathname===path
 
   // Dropdown references
   const profileDropdownRef = useRef(null);
@@ -38,18 +40,18 @@ function Navbaruser() {
   }, []);
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900 relative">
+    <nav className="bg-white border-gray-200  relative">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link to="/" className="flex items-center space-x-3">
           <img src={navicon} className="h-8" alt="MyJobGator Logo" />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center text-2xl font-semibold whitespace-nowrap">
             MyjobGator
           </span>
         </Link>
         <button
           onClick={() => setShowButton(!showButton)}
           type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
         >
           <span className="sr-only">Open main menu</span>
           <svg
@@ -75,11 +77,11 @@ function Navbaruser() {
           } w-full md:block md:w-auto md:static`}
           id="navbar-default"
         >
-          <ul className="font-medium flex flex-col md:flex-row md:space-x-8 bg-white md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 md:ml-auto md:justify-end p-4 md:p-0 border md:border-0 rounded-lg shadow md:shadow-none">
+          <ul className="font-medium flex flex-col md:flex-row md:space-x-8 bg-white md:bg-transparent md:ml-auto md:justify-end p-4 md:p-0 border md:border-0 rounded-lg shadow md:shadow-none">
             <li>
               <Link
                 to="/"
-                className="block py-2 px-3 text-white bg-orange-700 rounded-sm md:bg-transparent md:text-orange-700 md:p-0 dark:text-white md:dark:text-orange-500"
+                className={`${isActive("/")?"text-orange-600":"text-gray-900"}  block py-2 px-3 rounded-sm md:bg-transparent md:p-0 hover:text-orange-600`}
               >
                 Home
               </Link>
@@ -87,7 +89,7 @@ function Navbaruser() {
             <li>
               <Link
                 to="/about"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-700 md:p-0 dark:text-white md:dark:hover:text-orange-500"
+                className={`${isActive("/about")?"text-orange-600":"text-gray-900"}  block py-2 px-3 rounded-sm md:bg-transparent md:p-0 hover:text-orange-600`}
               >
                 About
               </Link>
@@ -95,7 +97,7 @@ function Navbaruser() {
             <li>
               <Link
                 to="/myjobs"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-orange-700 md:p-0 dark:text-white md:dark:hover:text-orange-500"
+                className={`${isActive("/myjobs")?"text-orange-600":"text-gray-900"}  block py-2 px-3 rounded-sm md:bg-transparent md:p-0 hover:text-orange-600`}
               >
                 My jobs
               </Link>
@@ -114,12 +116,12 @@ function Navbaruser() {
                 />
               </button>
               {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-                  <ul className="py-2 text-gray-700 dark:text-gray-200">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg ">
+                  <ul className="py-2">
                     <li>
                       <Link
                         to="/profile"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className={`${isActive("/profile")?"text-orange-600":"text-gray-900"} block px-4 py-2 hover:bg-gray-100`}
                       >
                          <FontAwesomeIcon icon={faUser} /> Profile
                       </Link>
@@ -132,7 +134,7 @@ function Navbaruser() {
                         Settings
                       </Link>
                     </li> */}
-                    <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <li className="block px-4 py-2 hover:bg-gray-100 ">
                       <button onClick={logOut}><FontAwesomeIcon icon={faArrowRightFromBracket} /> Logout</button>
                     </li>
                   </ul>

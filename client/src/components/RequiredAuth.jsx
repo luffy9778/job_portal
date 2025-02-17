@@ -3,15 +3,18 @@ import AuthContext from "../context/AuthContext";
 import { Navigate, Outlet } from "react-router-dom";
 
 const RequiredAuth = ({ allowedRoles }) => {
-  const { auth } = useContext(AuthContext);
-  console.log("Auth Role:", auth?.role, "Allowed:", allowedRoles); // Debugging
+  const { auth,loggingOut } = useContext(AuthContext);
+  
+  if (loggingOut) {
+    return <div>Logging out...</div>;
+  }
 
   if (!auth?.accessToken) {
     return <Navigate to="/login" replace />;
   }
 
   if (auth.role !== allowedRoles) {
-    switch (auth.role) {
+    switch (auth?.role) {
       case "user":
         return <Navigate to="/" replace />;
       case "recruiter":

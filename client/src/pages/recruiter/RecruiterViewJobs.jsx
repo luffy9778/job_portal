@@ -43,7 +43,7 @@ function RecruiterViewJobs() {
   };
 
   return (
-    <div className=" flex justify-center items-center bg-gray-100 w-full">
+    <div className="flex justify-center items-center bg-gray-100 w-full">
       <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg p-6">
         <div className="text-center py-4 w-full">
           <div className="inline-flex gap-3 text-lg">
@@ -76,12 +76,12 @@ function RecruiterViewJobs() {
           ) : (
             <>
               {postedJobs?.jobs?.map((i) => (
-                <div className="py-4 px-4 bg-gray-50 rounded-xl shadow-md flex justify-between items-center mb-5 text-sm">
+                <div className="py-4 px-4 md:px-14 bg-gray-50 rounded-xl shadow-md flex justify-between items-center mb-5 text-sm">
                   <div className="text-xl font-semibold text-gray-800">{i.title}</div>
                   <div className="flex items-center">
                     {i?.status === "open" && (
                       <button
-                        className="p-2 rounded-lg bg-red-600 text-white hover:scale-105 mr-3"
+                        className="p-2 rounded-lg bg-red-600 text-white hover:scale-105 md:mr-12"
                         onClick={() => handleClose(i._id)}
                       >
                         Close Job
@@ -96,7 +96,7 @@ function RecruiterViewJobs() {
                   </div>
                 </div>
               ))}
-              <div className="pt-6 flex justify-center">
+              <div className="pt-14 flex justify-center relative">
                 <PaginationBar
                   totalPages={totalPages}
                   currentPage={currentPage}

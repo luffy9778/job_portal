@@ -7,7 +7,9 @@ const RecruiterLayout = () => {
     <>
       <div className=" h-screen overflow-y-auto">
         <RecruiterNavbar />
-        <Outlet />
+        <div className="md:ml-64">
+                  <Outlet />
+                </div>
       </div>
     </>
   );
